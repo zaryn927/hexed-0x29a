@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.hexed0x29a.InterfacesAndAbstracts;
+package edu.cnm.deepdive.hexed0x29a.interfaces_abstracts;
 
 /**
  * Created by zaryn on 7/24/2017.

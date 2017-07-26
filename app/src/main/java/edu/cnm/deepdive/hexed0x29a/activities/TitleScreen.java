@@ -1,13 +1,11 @@
-package edu.cnm.deepdive.hexed0x29a.Activities;
+package edu.cnm.deepdive.hexed0x29a.activities;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import edu.cnm.deepdive.hexed0x29a.R;
 
 public class TitleScreen extends ListActivity {
 

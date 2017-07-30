@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:oneshot="false">
+  <item android:drawable="@drawable/gray_witch_9" android:duration="200" />
+  <item android:drawable="@drawable/gray_witch_10" android:duration="200" />
+  <item android:drawable="@drawable/gray_witch_11" android:duration="200" />
+  <item android:drawable="@drawable/gray_witch_12" android:duration="200" />
+</animation-list>

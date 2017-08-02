@@ -15,6 +15,7 @@
       android:screenOrientation="landscape">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
+
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
@@ -33,7 +34,10 @@
       android:label="@string/pause_screen"
       android:name=".activities.Pause"
       android:screenOrientation="landscape" />
-
+    <activity
+      android:name=".activities.AndroidDatabaseManager"
+      android:theme="@style/Theme.AppCompat.Light" />
+    <activity android:name=".activities.TestActivity"></activity>
   </application>
 
 </manifest>

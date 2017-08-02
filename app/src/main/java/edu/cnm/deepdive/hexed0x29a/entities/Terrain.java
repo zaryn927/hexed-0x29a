@@ -25,6 +25,11 @@ public class Terrain {
 
   }
 
+  @Override
+  public String toString() {
+    return terrainType.toString();
+  }
+
   public long getDummyId() {
     return dummyId;
   }

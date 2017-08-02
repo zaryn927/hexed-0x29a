@@ -23,6 +23,11 @@ public class TerrainType {
 
   }
 
+  @Override
+  public String toString(){
+    return terrainName;
+  }
+
   public int getId() {
     return id;
   }

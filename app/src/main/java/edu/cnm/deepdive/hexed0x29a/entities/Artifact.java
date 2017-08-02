@@ -31,6 +31,11 @@ public class Artifact {
 
   }
 
+  @Override
+  public String toString() {
+    return artifactType.toString();
+  }
+
   public int getId() {
     return id;
   }

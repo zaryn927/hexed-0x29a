@@ -1,24 +1,19 @@
 package edu.cnm.deepdive.hexed0x29a.activities;
 
 import android.app.Activity;
-import android.graphics.drawable.AnimationDrawable;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
-import android.widget.ImageView;
+
 import edu.cnm.deepdive.hexed0x29a.R;
+import edu.cnm.deepdive.hexed0x29a.views.Screen;
 
 public class NewGame extends Activity {
 
-  AnimationDrawable characterAnimationFront;
-  AnimationDrawable characterAnimationBack;
-  AnimationDrawable characterAnimationRight;
-  AnimationDrawable characterAnimationLeft;
   Button upButton;
   Button downButton;
   Button rightButton;
@@ -31,25 +26,6 @@ public class NewGame extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_game);
 
-    final ImageView characterFront = (ImageView) findViewById(R.id.frontView);
-    //characterFront.setBackgroundResource(R.drawable.front);
-    characterAnimationFront = (AnimationDrawable) characterFront.getBackground();
-
-    final ImageView characterBack = (ImageView) findViewById(R.id.backView);
-    //characterBack.setBackgroundResource(R.drawable.back);
-    characterAnimationBack = (AnimationDrawable) characterBack.getBackground();
-
-    final ImageView characterRight = (ImageView) findViewById(R.id.rightView);
-    //characterRight.setBackgroundResource(R.drawable.right);
-    characterAnimationRight = (AnimationDrawable) characterRight.getBackground();
-
-    final ImageView characterLeft = (ImageView) findViewById(R.id.leftView);
-    //characterLeft.setBackgroundResource(R.drawable.left);
-    characterAnimationLeft = (AnimationDrawable) characterLeft.getBackground();
-
-    final ImageView map = (ImageView) findViewById(R.id.mapView) ;
-
-
     upButton = (Button) findViewById(R.id.upButton);
     downButton = (Button) findViewById(R.id.downButton);
     rightButton = (Button) findViewById(R.id.rightButton);
@@ -61,15 +37,10 @@ public class NewGame extends Activity {
       public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
           case MotionEvent.ACTION_DOWN:
-            characterFront.setVisibility(View.INVISIBLE);
-            characterRight.setVisibility(View.INVISIBLE);
-            characterLeft.setVisibility(View.INVISIBLE);
-            characterBack.setVisibility(View.VISIBLE);
-            characterAnimationBack.start();
-            map.scrollBy(0, 50);
+            ((Screen)findViewById(R.id.screenView)).setUpPressed(true);
             return true;
           case MotionEvent.ACTION_UP:
-            characterAnimationBack.stop();
+            ((Screen)findViewById(R.id.screenView)).setUpPressed(false);
         }
         return false;
       }
@@ -81,15 +52,10 @@ public class NewGame extends Activity {
       public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
           case MotionEvent.ACTION_DOWN:
-            characterBack.setVisibility(View.INVISIBLE);
-            characterRight.setVisibility(View.INVISIBLE);
-            characterLeft.setVisibility(View.INVISIBLE);
-            characterFront.setVisibility(View.VISIBLE);
-            characterAnimationFront.start();
-            map.scrollBy(0, 50);
+            ((Screen)findViewById(R.id.screenView)).setDownPressed(true);
             return true;
           case MotionEvent.ACTION_UP:
-            characterAnimationFront.stop();
+            ((Screen)findViewById(R.id.screenView)).setDownPressed(false);
             return true;
         }
         return false;
@@ -102,15 +68,10 @@ public class NewGame extends Activity {
       public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
           case MotionEvent.ACTION_DOWN:
-            characterFront.setVisibility(View.INVISIBLE);
-            characterBack.setVisibility(View.INVISIBLE);
-            characterLeft.setVisibility(View.INVISIBLE);
-            characterRight.setVisibility(View.VISIBLE);
-            characterAnimationRight.start();
-            map.scrollBy(50, 0);
+            ((Screen)findViewById(R.id.screenView)).setRightPressed(true);
             return true;
           case MotionEvent.ACTION_UP:
-            characterAnimationRight.stop();
+            ((Screen)findViewById(R.id.screenView)).setRightPressed(false);
             return true;
         }
         return false;
@@ -122,21 +83,29 @@ public class NewGame extends Activity {
       public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
           case MotionEvent.ACTION_DOWN:
-            characterFront.setVisibility(View.INVISIBLE);
-            characterRight.setVisibility(View.INVISIBLE);
-            characterBack.setVisibility(View.INVISIBLE);
-            characterLeft.setVisibility(View.VISIBLE);
-            characterAnimationLeft.start();
-            map.scrollBy(50, 0);
+            ((Screen)findViewById(R.id.screenView)).setLeftPressed(true);
             return true;
           case MotionEvent.ACTION_UP:
-            characterAnimationLeft.stop();
+            ((Screen)findViewById(R.id.screenView)).setLeftPressed(false);
         }
         return false;
       }
     });
 
 
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    ((Screen)findViewById(R.id.screenView)).resume();
+
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    ((Screen)findViewById(R.id.screenView)).pause();
   }
 
 }

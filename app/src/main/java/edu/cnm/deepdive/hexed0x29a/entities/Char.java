@@ -1,6 +1,8 @@
 package edu.cnm.deepdive.hexed0x29a.entities;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
@@ -36,8 +38,16 @@ public class Char {
   @DatabaseField(columnName = "STAMINA_RECHARGE_RATE", canBeNull = false)
   private double staminaRechargeRate;
 
+  @ForeignCollectionField(eager = false)
+  private ForeignCollection<Artifact> artifacts;
+
   public Char(){
 
+  }
+
+  @Override
+  public String toString() {
+    return name;
   }
 
   public int getId() {

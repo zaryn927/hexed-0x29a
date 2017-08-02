@@ -2,21 +2,12 @@ package edu.cnm.deepdive.hexed0x29a.views;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
-import android.widget.Button;
 import edu.cnm.deepdive.hexed0x29a.R;
 
 /**
@@ -25,14 +16,7 @@ import edu.cnm.deepdive.hexed0x29a.R;
 
 public class Screen extends SurfaceView implements Callback, Runnable {
 
-//  AnimationDrawable characterAnimationFront;
-//  AnimationDrawable characterAnimationBack;
-//  AnimationDrawable characterAnimationRight;
-//  AnimationDrawable characterAnimationLeft;
   Drawable background;
-//  Rect characterBounds;
-
-
   SurfaceHolder holder;
   Thread renderThread = null;
   volatile boolean isRunning = false;
@@ -75,10 +59,6 @@ public class Screen extends SurfaceView implements Callback, Runnable {
     holder.addCallback(this);
 
     Resources res = this.getResources();
-//    characterAnimationFront = (AnimationDrawable)res.getDrawable(R.drawable.front);
-//    characterAnimationBack = (AnimationDrawable)res.getDrawable(R.drawable.back);
-//    characterAnimationRight = (AnimationDrawable)res.getDrawable(R.drawable.right);
-//    characterAnimationLeft = (AnimationDrawable)res.getDrawable(R.drawable.left);
     background = (Drawable)res.getDrawable(R.drawable.map);
 
   }
@@ -91,83 +71,7 @@ public class Screen extends SurfaceView implements Callback, Runnable {
   @Override
   public void surfaceCreated(SurfaceHolder holder) {
     Canvas canvas = holder.lockCanvas();
-//    characterBounds = new Rect(this.getWidth() / 2 - 85,this.getHeight() / 2 - 85,this.getWidth() / 2 + 85,this.getHeight() / 2 + 85);
-//    characterAnimationFront.setBounds(characterBounds);
-//    characterAnimationBack.setBounds(characterBounds);
-//    characterAnimationRight.setBounds(characterBounds);
-//    characterAnimationLeft.setBounds(characterBounds);
-//    characterAnimationFront.setCallback(new Drawable.Callback() {
-//      @Override
-//      public void invalidateDrawable(@NonNull Drawable who) {
-//        return;
-//      }
-//
-//      @Override
-//      public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
-//        Handler handler = new Handler();
-//        handler.postAtTime(what, when);
-//      }
-//
-//      @Override
-//      public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
-//        return;
-//      }
-//    });
-//    characterAnimationBack.setCallback(new Drawable.Callback() {
-//      @Override
-//      public void invalidateDrawable(@NonNull Drawable who) {
-//        return;
-//      }
-//
-//      @Override
-//      public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
-//        Handler handler = new Handler();
-//        handler.postAtTime(what, when);
-//      }
-//
-//      @Override
-//      public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
-//        return;
-//      }
-//    });
-//    characterAnimationRight.setCallback(new Drawable.Callback() {
-//      @Override
-//      public void invalidateDrawable(@NonNull Drawable who) {
-//        return;
-//      }
-//
-//      @Override
-//      public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
-//        Handler handler = new Handler();
-//        handler.postAtTime(what, when);
-//      }
-//
-//      @Override
-//      public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
-//        return;
-//      }
-//    });
-//    characterAnimationLeft.setCallback(new Drawable.Callback() {
-//      @Override
-//      public void invalidateDrawable(@NonNull Drawable who) {
-//        return;
-//      }
-//
-//      @Override
-//      public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
-//        Handler handler = new Handler();
-//        handler.postAtTime(what, when);
-//      }
-//
-//      @Override
-//      public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
-//        return;
-//      }
-//    });
-//    characterAnimationFront.start();
-//    characterAnimationBack.start();
-//    characterAnimationRight.start();
-//    characterAnimationLeft.start();
+
     getHolder().unlockCanvasAndPost(canvas);
   }
 
@@ -193,23 +97,18 @@ public class Screen extends SurfaceView implements Callback, Runnable {
         continue;
       }
       Canvas canvas = holder.lockCanvas();
-      if (upPressed) {
+      while (upPressed) {
         canvas.translate(0, 20);
         background.draw(canvas);
-        //canvas.drawRGB(0, 0, 0);
-//        characterAnimationBack.draw(canvas);
-      } else if (downPressed) {
+      } while (downPressed) {
+        canvas.translate(0, -20);
         background.draw(canvas);
-        //canvas.drawRGB(0, 0, 0);
-//        characterAnimationFront.draw(canvas);
-      } else if (rightPressed) {
+      } while (rightPressed) {
+        canvas.translate(20, 0);
        background.draw(canvas);
-        //canvas.drawRGB(0, 0, 0);
-//        characterAnimationRight.draw(canvas);
-      } else if (leftPressed) {
+      } while (leftPressed) {
+        canvas.translate(-20, 0);
         background.draw(canvas);
-        //canvas.drawRGB(0, 0, 0);
-//        characterAnimationLeft.draw(canvas);
       }
       holder.unlockCanvasAndPost(canvas);
     }

@@ -2,6 +2,7 @@ package edu.cnm.deepdive.hexed0x29a.activities;
 
 import android.app.Activity;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 
+import android.widget.ImageView;
 import edu.cnm.deepdive.hexed0x29a.R;
 import edu.cnm.deepdive.hexed0x29a.views.Screen;
 
@@ -19,12 +21,28 @@ public class NewGame extends Activity {
   Button rightButton;
   Button leftButton;
 
+  ImageView backView;
+  ImageView frontView;
+  ImageView rightView;
+  ImageView leftView;
+
+  AnimationDrawable walk;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,LayoutParams.FLAG_FULLSCREEN);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_game);
+
+    backView = (ImageView)findViewById(R.id.backView) ;
+    backView.setBackgroundResource(R.drawable.back);
+    frontView = (ImageView)findViewById(R.id.frontView) ;
+    frontView.setBackgroundResource(R.drawable.front);
+    rightView = (ImageView)findViewById(R.id.rightView) ;
+    rightView.setBackgroundResource(R.drawable.right);
+    leftView = (ImageView)findViewById(R.id.leftView) ;
+    leftView.setBackgroundResource(R.drawable.left);
 
     upButton = (Button) findViewById(R.id.upButton);
     downButton = (Button) findViewById(R.id.downButton);
@@ -38,9 +56,16 @@ public class NewGame extends Activity {
         switch (event.getAction()) {
           case MotionEvent.ACTION_DOWN:
             ((Screen)findViewById(R.id.screenView)).setUpPressed(true);
+            frontView.setVisibility(View.INVISIBLE);
+            backView.setVisibility(View.VISIBLE);
+            rightView.setVisibility(View.INVISIBLE);
+            leftView.setVisibility(View.INVISIBLE);
+            walk = (AnimationDrawable) backView.getBackground();
+            walk.start();
             return true;
           case MotionEvent.ACTION_UP:
             ((Screen)findViewById(R.id.screenView)).setUpPressed(false);
+            walk.stop();
         }
         return false;
       }
@@ -53,9 +78,16 @@ public class NewGame extends Activity {
         switch (event.getAction()) {
           case MotionEvent.ACTION_DOWN:
             ((Screen)findViewById(R.id.screenView)).setDownPressed(true);
+            frontView.setVisibility(View.VISIBLE);
+            backView.setVisibility(View.INVISIBLE);
+            rightView.setVisibility(View.INVISIBLE);
+            leftView.setVisibility(View.INVISIBLE);
+            walk = (AnimationDrawable) frontView.getBackground();
+            walk.start();
             return true;
           case MotionEvent.ACTION_UP:
             ((Screen)findViewById(R.id.screenView)).setDownPressed(false);
+            walk.stop();
             return true;
         }
         return false;
@@ -69,9 +101,16 @@ public class NewGame extends Activity {
         switch (event.getAction()) {
           case MotionEvent.ACTION_DOWN:
             ((Screen)findViewById(R.id.screenView)).setRightPressed(true);
+            frontView.setVisibility(View.INVISIBLE);
+            backView.setVisibility(View.INVISIBLE);
+            rightView.setVisibility(View.VISIBLE);
+            leftView.setVisibility(View.INVISIBLE);
+            walk = (AnimationDrawable) rightView.getBackground();
+            walk.start();
             return true;
           case MotionEvent.ACTION_UP:
             ((Screen)findViewById(R.id.screenView)).setRightPressed(false);
+            walk.stop();
             return true;
         }
         return false;
@@ -84,9 +123,16 @@ public class NewGame extends Activity {
         switch (event.getAction()) {
           case MotionEvent.ACTION_DOWN:
             ((Screen)findViewById(R.id.screenView)).setLeftPressed(true);
+            frontView.setVisibility(View.INVISIBLE);
+            backView.setVisibility(View.INVISIBLE);
+            rightView.setVisibility(View.INVISIBLE);
+            leftView.setVisibility(View.VISIBLE);
+            walk = (AnimationDrawable) leftView.getBackground();
+            walk.start();
             return true;
           case MotionEvent.ACTION_UP:
             ((Screen)findViewById(R.id.screenView)).setLeftPressed(false);
+            walk.stop();
         }
         return false;
       }

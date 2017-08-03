@@ -92,24 +92,25 @@ public class Screen extends SurfaceView implements Callback, Runnable {
 
   @Override
   public void run() {
+    int x = 0;
+    int y = 0;
     while(isRunning) {
       if (!holder.getSurface().isValid()) {
         continue;
       }
       Canvas canvas = holder.lockCanvas();
-      while (upPressed) {
-        canvas.translate(0, 20);
-        background.draw(canvas);
-      } while (downPressed) {
-        canvas.translate(0, -20);
-        background.draw(canvas);
-      } while (rightPressed) {
-        canvas.translate(20, 0);
-       background.draw(canvas);
-      } while (leftPressed) {
-        canvas.translate(-20, 0);
-        background.draw(canvas);
+
+      if (upPressed) {
+        y += 5;
+      } else if (downPressed) {
+        y -= 5;
+      } else if (rightPressed) {
+        x -= 5;
+      } else if (leftPressed) {
+        x += 5;
       }
+      canvas.translate(x, y);
+      background.draw(canvas);
       holder.unlockCanvasAndPost(canvas);
     }
   }

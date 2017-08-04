@@ -6,10 +6,12 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import edu.cnm.deepdive.hexed0x29a.R;
 import edu.cnm.deepdive.hexed0x29a.views.Screen;
@@ -20,6 +22,7 @@ public class NewGame extends Activity {
   Button downButton;
   Button rightButton;
   Button leftButton;
+  ImageButton pauseButton;
 
   ImageView backView;
   ImageView frontView;
@@ -48,6 +51,8 @@ public class NewGame extends Activity {
     downButton = (Button) findViewById(R.id.downButton);
     rightButton = (Button) findViewById(R.id.rightButton);
     leftButton = (Button) findViewById(R.id.leftButton);
+    pauseButton = (ImageButton) findViewById(R.id.pauseButton);
+
 
     upButton.setOnTouchListener(new View.OnTouchListener() {
 
@@ -138,6 +143,13 @@ public class NewGame extends Activity {
       }
     });
 
+    pauseButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+
+      }
+    });
+
 
   }
 
@@ -152,6 +164,7 @@ public class NewGame extends Activity {
   protected void onPause() {
     super.onPause();
     ((Screen)findViewById(R.id.screenView)).pause();
+
   }
 
 }

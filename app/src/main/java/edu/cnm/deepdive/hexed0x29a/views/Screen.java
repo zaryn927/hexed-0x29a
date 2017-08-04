@@ -92,25 +92,37 @@ public class Screen extends SurfaceView implements Callback, Runnable {
 
   @Override
   public void run() {
-    int x = 0;
-    int y = 0;
+    float x = 0;
+    float y = 0;
+    float distFromCenter;
+    float scaleX;
+    float scaleY;
+
     while(isRunning) {
       if (!holder.getSurface().isValid()) {
         continue;
       }
       Canvas canvas = holder.lockCanvas();
+      float origX = x + canvas.getWidth() / 2; // Still tweaking to offset origin
+      float origY = y + canvas.getHeight() / 2; // Still tweaking to offset origin
 
       if (upPressed) {
-        y += 5;
+        y += 12 ;
       } else if (downPressed) {
-        y -= 5;
+        y -= 12;
       } else if (rightPressed) {
-        x -= 5;
+        x -= 16;
       } else if (leftPressed) {
-        x += 5;
+        x += 16;
       }
-      canvas.translate(x, y);
+      distFromCenter = (Math.abs(y) > Math.abs(x)) ? Math.abs(y) / 5000 : Math.abs(x) /5000;
+      scaleX = distFromCenter + 1;
+      scaleY = distFromCenter + 1;
+      canvas.translate(x + (canvas.getWidth() / 2), y + (canvas.getHeight() / 2));
+      canvas.scale(scaleX, scaleY, 0, 0);
       background.draw(canvas);
+
+
       holder.unlockCanvasAndPost(canvas);
     }
   }

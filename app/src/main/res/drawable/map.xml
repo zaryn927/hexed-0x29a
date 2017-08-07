@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
   <item>
     <bitmap
+      android:id="@+id/map"
       android:src="@drawable/temp_map"
       android:gravity="center"/>
   </item>

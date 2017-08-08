@@ -23,20 +23,20 @@ public class Char {
   @DatabaseField(columnName = "Y_LOC", canBeNull = false)
   private int y;
 
-  @DatabaseField(columnName = "NPC", canBeNull = false)
-  private boolean npc;
-
-  @DatabaseField(columnName = "HEALTH", canBeNull = false)
-  private int health;
-
-  @DatabaseField(columnName = "HEALTH_RECHARGE_RATE")
-  private int healthRechargeRate;
-
-  @DatabaseField(columnName = "STAMINA", canBeNull = false)
-  private int stamina;
-
-  @DatabaseField(columnName = "STAMINA_RECHARGE_RATE", canBeNull = false)
-  private double staminaRechargeRate;
+//  @DatabaseField(columnName = "NPC", canBeNull = false)
+//  private boolean npc;
+//
+//  @DatabaseField(columnName = "HEALTH", canBeNull = false)
+//  private int health;
+//
+//  @DatabaseField(columnName = "HEALTH_RECHARGE_RATE")
+//  private int healthRechargeRate;
+//
+//  @DatabaseField(columnName = "STAMINA", canBeNull = false)
+//  private int stamina;
+//
+//  @DatabaseField(columnName = "STAMINA_RECHARGE_RATE", canBeNull = false)
+//  private double staminaRechargeRate;
 
   @ForeignCollectionField(eager = false)
   private ForeignCollection<Artifact> artifacts;
@@ -78,43 +78,43 @@ public class Char {
     this.y = y;
   }
 
-  public boolean isNpc() {
-    return npc;
-  }
-
-  public void setNpc(boolean npc) {
-    this.npc = npc;
-  }
-
-  public int getHealth() {
-    return health;
-  }
-
-  public void setHealth(int health) {
-    this.health = health;
-  }
-
-  public int getHealthRechargeRate() {
-    return healthRechargeRate;
-  }
-
-  public void setHealthRechargeRate(int healthRechargeRate) {
-    this.healthRechargeRate = healthRechargeRate;
-  }
-
-  public int getStamina() {
-    return stamina;
-  }
-
-  public void setStamina(int stamina) {
-    this.stamina = stamina;
-  }
-
-  public double getStaminaRechargeRate() {
-    return staminaRechargeRate;
-  }
-
-  public void setStaminaRechargeRate(double staminaRechargeRate) {
-    this.staminaRechargeRate = staminaRechargeRate;
-  }
+//  public boolean isNpc() {
+//    return npc;
+//  }
+//
+//  public void setNpc(boolean npc) {
+//    this.npc = npc;
+//  }
+//
+//  public int getHealth() {
+//    return health;
+//  }
+//
+//  public void setHealth(int health) {
+//    this.health = health;
+//  }
+//
+//  public int getHealthRechargeRate() {
+//    return healthRechargeRate;
+//  }
+//
+//  public void setHealthRechargeRate(int healthRechargeRate) {
+//    this.healthRechargeRate = healthRechargeRate;
+//  }
+//
+//  public int getStamina() {
+//    return stamina;
+//  }
+//
+//  public void setStamina(int stamina) {
+//    this.stamina = stamina;
+//  }
+//
+//  public double getStaminaRechargeRate() {
+//    return staminaRechargeRate;
+//  }
+//
+//  public void setStaminaRechargeRate(double staminaRechargeRate) {
+//    this.staminaRechargeRate = staminaRechargeRate;
+//  }
 }

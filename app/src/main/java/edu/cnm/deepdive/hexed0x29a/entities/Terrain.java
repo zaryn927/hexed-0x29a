@@ -18,8 +18,13 @@ public class Terrain {
   @DatabaseField(uniqueCombo = true, columnName = "Y_LOC", canBeNull = false)
   private int y;
 
-  @DatabaseField(columnName = "TERRAIN_TYPE", canBeNull = false, foreign = true)
-  private TerrainType terrainType;
+  @DatabaseField(columnName = "COLLISION", canBeNull = false)
+  private boolean blocked;
+
+  @DatabaseField(columnName = "OBSCURE", canBeNull = false)
+  private boolean obscured;
+//  @DatabaseField(columnName = "TERRAIN_TYPE", canBeNull = false, foreign = true)
+//  private TerrainType terrainType;
 
   public Terrain(){
 
@@ -27,7 +32,12 @@ public class Terrain {
 
   @Override
   public String toString() {
-    return terrainType.toString();
+    StringBuilder sb = new StringBuilder();
+    sb.append(x + ", ");
+    sb.append(y + ", ");
+    sb.append(blocked + ", ");
+    sb.append(obscured);
+    return sb.toString();
   }
 
   public long getDummyId() {
@@ -50,11 +60,27 @@ public class Terrain {
     this.y = y;
   }
 
-  public TerrainType getTerrainType() {
-    return terrainType;
+  public boolean isBlocked() {
+    return blocked;
   }
 
-  public void setTerrainType(TerrainType terrainType) {
-    this.terrainType = terrainType;
+  public void setBlocked(boolean blocked) {
+    this.blocked = blocked;
   }
+
+  public boolean isObscured() {
+    return obscured;
+  }
+
+  public void setObscured(boolean obscured) {
+    this.obscured = obscured;
+  }
+
+  //  public TerrainType getTerrainType() {
+//    return terrainType;
+//  }
+//
+//  public void setTerrainType(TerrainType terrainType) {
+//    this.terrainType = terrainType;
+//  }
 }

@@ -1,6 +1,5 @@
 package edu.cnm.deepdive.hexed0x29a.views;
 
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -12,6 +11,9 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import edu.cnm.deepdive.hexed0x29a.R;
+import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
+import edu.cnm.deepdive.hexed0x29a.entities.Char;
+import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
 
 /**
  * Created by zaryn on 7/31/2017.
@@ -23,6 +25,7 @@ public class Screen extends SurfaceView implements Callback, Runnable {
   SurfaceHolder holder;
   Thread renderThread = null;
   volatile boolean isRunning = false;
+  Char character;
 
   public boolean isUpPressed() {
     return upPressed;
@@ -149,7 +152,7 @@ public class Screen extends SurfaceView implements Callback, Runnable {
       canvas.translate((float) x + (canvas.getWidth() / 2), (float) y + (canvas.getHeight() / 2));
       background.draw(canvas);
       canvas.drawBitmap(greenGem,-2000,-1500,null);
-      canvas.drawBitmap(crystal,1750,-1300,null);
+      canvas.drawBitmap(crystal,1700,-1300,null);
 
       holder.unlockCanvasAndPost(canvas);
     }

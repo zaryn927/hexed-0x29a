@@ -54,7 +54,7 @@ public class TitleScreen extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         try {
-          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a.activities.Options");
+          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a.activities.TestActivity");
           Intent intent = new Intent(TitleScreen.this, activity);
           startActivity(intent);
         } catch (ClassNotFoundException e) {

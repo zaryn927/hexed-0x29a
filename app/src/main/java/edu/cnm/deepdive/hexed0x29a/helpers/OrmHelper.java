@@ -143,33 +143,38 @@ public class OrmHelper extends OrmLiteSqliteOpenHelper {
     getCharDao().create(player);
 
     Artifact artifact = new Artifact();
-    artifact.setArtifactType("Green Gem");
+    artifact.setArtifactType("greenGem");
     artifact.setX(-5);
     artifact.setY(5);
+    artifact.setCharacter(null);
     getArtifactDao().create(artifact);
 
     artifact = new Artifact();
-    artifact.setArtifactType("Blue Gem");
+    artifact.setArtifactType("blueGem");
     artifact.setX(-5);
     artifact.setY(-5);
+    artifact.setCharacter(null);
     getArtifactDao().create(artifact);
 
     artifact = new Artifact();
-    artifact.setArtifactType("Red Gem");
-    artifact.setX(-5);
+    artifact.setArtifactType("redGem");
+    artifact.setX(5);
+    artifact.setY(5);
+    artifact.setCharacter(null);
+    getArtifactDao().create(artifact);
+
+    artifact = new Artifact();
+    artifact.setArtifactType("pearl");
+    artifact.setX(5);
     artifact.setY(-5);
+    artifact.setCharacter(null);
     getArtifactDao().create(artifact);
 
     artifact = new Artifact();
-    artifact.setArtifactType("Pearl");
-    artifact.setX(-5);
-    artifact.setY(-5);
-    getArtifactDao().create(artifact);
-
-    artifact = new Artifact();
-    artifact.setArtifactType("Crystal");
+    artifact.setArtifactType("crystal");
     artifact.setX(0);
     artifact.setY(-5);
+    artifact.setCharacter(null);
     getArtifactDao().create(artifact);
 
     Terrain terrain;

@@ -78,6 +78,14 @@ public class Char {
     this.y = y;
   }
 
+  public ForeignCollection<Artifact> getArtifacts() {
+    return artifacts;
+  }
+
+  public void setArtifacts(
+      ForeignCollection<Artifact> artifacts) {
+    this.artifacts = artifacts;
+  }
 //  public boolean isNpc() {
 //    return npc;
 //  }

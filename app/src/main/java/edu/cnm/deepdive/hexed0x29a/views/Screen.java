@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
@@ -83,8 +84,8 @@ public class Screen extends SurfaceView implements Runnable {
     redGem = BitmapFactory.decodeResource(res, R.drawable.red_gem);
     pearl = BitmapFactory.decodeResource(res, R.drawable.pearl);
     crystal = BitmapFactory.decodeResource(res, R.drawable.crystal);
-    background = res.getDrawable(R.drawable.map);
     hourglass = BitmapFactory.decodeResource(res, R.drawable.hourglass);
+    background = res.getDrawable(R.drawable.map);
   }
 
   private synchronized OrmHelper getHelper() {
@@ -126,8 +127,8 @@ public class Screen extends SurfaceView implements Runnable {
       e.printStackTrace();
     }
     double distFromCenter = 0;
-    double scale =distFromCenter / 500 + 1;
-    double moveDistance = 10 / scale;
+    double scale = 1;
+    double moveDistance = 10 ;
 
     while(isRunning) {
 
@@ -146,18 +147,21 @@ public class Screen extends SurfaceView implements Runnable {
       } else if (downPressed) {
         if (!collisionDetection((int)-Math.ceil(x/100), (int)-(Math.ceil(y/100) + 1), 0, 1)) {
           y -= moveDistance;
+          updateCharacterLocation(character, x, y);
         } else {
 //          y += moveDistance*moveDistance;
         }
       } else if (rightPressed) {
         if (!collisionDetection((int)-(Math.ceil(x/100) + 1), (int)-Math.ceil(y/100), 1, 0)) {
           x -= moveDistance;
+          updateCharacterLocation(character,x,y);
         } else {
 //          x += moveDistance*moveDistance;
         }
       } else if (leftPressed) {
         if (!collisionDetection((int)-Math.floor(x/100), (int)-Math.ceil(y/100), -1, 0)) {
           x += moveDistance;
+          updateCharacterLocation(character,x,y);
         } else {
 //          x -= moveDistance*moveDistance;
         }
@@ -169,7 +173,8 @@ public class Screen extends SurfaceView implements Runnable {
       canvas.scale((float) scale, (float) scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
       canvas.translate((float) (x + (canvas.getWidth() / 2)), (float) (y + (canvas.getHeight() / 2)));
       background.draw(canvas);
-      drawArtifacts(canvas, queryArtifacts());
+
+      drawArtifacts(canvas, character, queryArtifacts());
       holder.unlockCanvasAndPost(canvas);
     }
   }
@@ -188,6 +193,7 @@ public class Screen extends SurfaceView implements Runnable {
 
   public void updateCharacterLocation(Char character, double x, double y){
       character.setY((int)(y / 100));
+    Log.d("character", character.toString());
       character.setX((int)(x / 100));
     try {
       characterDao.update(character);
@@ -220,7 +226,9 @@ public class Screen extends SurfaceView implements Runnable {
     return artifacts;
   }
 
-  public void drawArtifacts(Canvas canvas, List<Artifact> artifacts){
+  public void drawArtifacts(Canvas canvas, Char character, List<Artifact> artifacts){
+    float charX = character.getX();
+    float charY = character.getY();
     for (Artifact artifact : artifacts) {
       float x = artifact.getX();
       float y = artifact.getY();
@@ -245,7 +253,12 @@ public class Screen extends SurfaceView implements Runnable {
         default:
           bitmap = hourglass;
       }
-      canvas.drawBitmap( bitmap,x*100,y*100,null );
+      if(Math.abs(x - charX) < 0.1 && Math.abs(y - charY) < 0.1) {
+        artifact.setCharacter(character);
+      } else {
+        canvas.drawBitmap(bitmap, x * 100, y * 100, null);
+        Log.d("artifact", artifact.toString());
+      }
     }
   }
 }

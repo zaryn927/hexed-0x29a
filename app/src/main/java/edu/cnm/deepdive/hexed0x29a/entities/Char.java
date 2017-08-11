@@ -47,7 +47,7 @@ public class Char {
 
   @Override
   public String toString() {
-    return name;
+    return x +", "+ y;
   }
 
   public int getId() {

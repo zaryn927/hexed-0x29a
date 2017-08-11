@@ -32,10 +32,10 @@ public class Artifact {
 
   }
 
-//  @Override
-//  public String toString() {
-//    return artifactType.toString();
-//  }
+  @Override
+  public String toString() {
+    return x +", "+y;
+  }
 
   public int getId() {
     return id;

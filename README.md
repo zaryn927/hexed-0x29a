@@ -24,16 +24,16 @@ will result in a collision detection and stop the player from continuing in that
   when user exits to home from the main game and then tries to reopen the app, it will crash.
   
 ## Planned Improvements
-  -Organize and Clean Up Code
-  -Server Connection
-  -High Score Table
-  -Procedurally Generated Terrain Using Perlin Noise and Open Game Art
-  -May Investigate Using OpenGL ES Rather Than Canvas
-  -Audio
-  -Update Database Tables for Relevance as Necessary
-  -Fix Collision Detection
-  -Fix Crash on Resume
-  -Display Collection of Artifacts and Timer
-  -Pause Functionality
+  ### Organize and Clean Up Code
+  ### Server Connection
+  ### High Score Table
+  ### Procedurally Generated Terrain Using Perlin Noise and Open Game Art
+  ### May Investigate Using OpenGL ES Rather Than Canvas
+  ### Audio
+  ### Update Database Tables for Relevance as Necessary
+  ### Fix Collision Detection
+  ### Fix Crash on Resume
+  ### Display Collection of Artifacts and Timer
+  ### Pause Functionality
   
   

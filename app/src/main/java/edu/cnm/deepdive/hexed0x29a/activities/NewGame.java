@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,10 +14,30 @@ import android.widget.Button;
 
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import edu.cnm.deepdive.hexed0x29a.R;
+import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
 import edu.cnm.deepdive.hexed0x29a.views.Screen;
 
 public class NewGame extends Activity {
+
+  private OrmHelper dbHelper = null;
+
+  public synchronized OrmHelper getHelper() {
+    if (dbHelper == null) {
+      dbHelper = OpenHelperManager.getHelper(this, OrmHelper.class);
+    }
+    Log.d("dbhelper", "NewGame.getHelper");
+    return dbHelper;
+  }
+
+  public synchronized void releaseHelper() {
+    Log.d("dbhelper", "NewGame.releaseHelper");
+    if (dbHelper != null) {
+      OpenHelperManager.releaseHelper();
+      dbHelper = null;
+    }
+  }
 
   Button upButton;
   Button downButton;
@@ -155,14 +176,25 @@ public class NewGame extends Activity {
   protected void onResume() {
     super.onResume();
     ((Screen)findViewById(R.id.screenView)).resume();
-
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     ((Screen)findViewById(R.id.screenView)).pause();
-
   }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    getHelper();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    releaseHelper();
+  }
+
 
 }

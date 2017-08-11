@@ -16,11 +16,12 @@ import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 import com.j256.ormlite.dao.Dao;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 import edu.cnm.deepdive.hexed0x29a.R;
+import edu.cnm.deepdive.hexed0x29a.activities.NewGame;
 import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
 import edu.cnm.deepdive.hexed0x29a.entities.Char;
 import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
@@ -79,6 +80,7 @@ public class Screen extends SurfaceView implements Runnable {
   public Screen(Context context, AttributeSet attrs) {
     super(context, attrs);
     setWillNotDraw(false);
+    dbHelper = ((NewGame) context).getHelper();
     holder = getHolder();
     res = this.getResources();
     greenGem = BitmapFactory.decodeResource(res, R.drawable.green_gem);
@@ -89,7 +91,7 @@ public class Screen extends SurfaceView implements Runnable {
     hourglass = BitmapFactory.decodeResource(res, R.drawable.hourglass);
     background = res.getDrawable(R.drawable.map);
     try {
-      artifactDao = getHelper().getArtifactDao();
+      artifactDao = dbHelper.getArtifactDao();
       Artifact artifact = new Artifact();
       artifact.setArtifactType("greenGem");
       artifact.setX(2);
@@ -129,19 +131,7 @@ public class Screen extends SurfaceView implements Runnable {
     }
   }
 
-  private synchronized OrmHelper getHelper() {
-    if (dbHelper == null) {
-      dbHelper = OpenHelperManager.getHelper(getContext(), OrmHelper.class);
-    }
-    return dbHelper;
-  }
 
-  private synchronized void releaseHelper() {
-    if (dbHelper != null) {
-      OpenHelperManager.releaseHelper();
-      dbHelper = null;
-    }
-  }
 
   public void resume() {
     isRunning = true;
@@ -152,7 +142,7 @@ public class Screen extends SurfaceView implements Runnable {
   @Override
   public void run() {
     try {
-      characterDao = getHelper().getCharDao();
+      characterDao = dbHelper.getCharDao();
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -246,7 +236,7 @@ public class Screen extends SurfaceView implements Runnable {
   public boolean collisionDetection (int x, int y, int dx, int dy) {
     Terrain t = null;
     try {
-      terrainDao = getHelper().getTerrainDao();
+      terrainDao = dbHelper.getTerrainDao();
       QueryBuilder<Terrain, Integer> terrainQuery = terrainDao.queryBuilder();
       t = terrainQuery.where().eq("X_LOC", x + dx).and().eq("Y_LOC", y + dy).queryForFirst();
     } catch (SQLException e) {
@@ -258,7 +248,7 @@ public class Screen extends SurfaceView implements Runnable {
   public List<Artifact> queryArtifacts() {
     List<Artifact> artifacts = null;
     try {
-      artifactDao = getHelper().getArtifactDao();
+      artifactDao = dbHelper.getArtifactDao();
       QueryBuilder<Artifact, Integer> queryBuilder = artifactDao.queryBuilder();
       artifacts = queryBuilder.where().isNull("CHAR_ID").query();
     } catch (SQLException e) {
@@ -296,7 +286,7 @@ public class Screen extends SurfaceView implements Runnable {
       }
       if(Math.abs(x - charX) < 0.1 && Math.abs(y - charY) < 0.1) {
         try {
-          artifactDao = getHelper().getArtifactDao();
+          artifactDao = dbHelper.getArtifactDao();
           artifact.setCharacter(character);
           artifactDao.update(artifact);
         } catch (SQLException e) {

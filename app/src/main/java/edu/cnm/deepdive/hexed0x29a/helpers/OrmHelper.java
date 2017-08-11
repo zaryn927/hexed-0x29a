@@ -142,40 +142,40 @@ public class OrmHelper extends OrmLiteSqliteOpenHelper {
     player.setY(0);
     getCharDao().create(player);
 
-    Artifact artifact = new Artifact();
-    artifact.setArtifactType("greenGem");
-    artifact.setX(-5);
-    artifact.setY(5);
-    artifact.setCharacter(null);
-    getArtifactDao().create(artifact);
-
-    artifact = new Artifact();
-    artifact.setArtifactType("blueGem");
-    artifact.setX(-5);
-    artifact.setY(-5);
-    artifact.setCharacter(null);
-    getArtifactDao().create(artifact);
-
-    artifact = new Artifact();
-    artifact.setArtifactType("redGem");
-    artifact.setX(5);
-    artifact.setY(5);
-    artifact.setCharacter(null);
-    getArtifactDao().create(artifact);
-
-    artifact = new Artifact();
-    artifact.setArtifactType("pearl");
-    artifact.setX(5);
-    artifact.setY(-5);
-    artifact.setCharacter(null);
-    getArtifactDao().create(artifact);
-
-    artifact = new Artifact();
-    artifact.setArtifactType("crystal");
-    artifact.setX(0);
-    artifact.setY(-5);
-    artifact.setCharacter(null);
-    getArtifactDao().create(artifact);
+//    Artifact artifact = new Artifact();
+//    artifact.setArtifactType("greenGem");
+//    artifact.setX(-5);
+//    artifact.setY(5);
+//    artifact.setCharacter(null);
+//    getArtifactDao().create(artifact);
+//
+//    artifact = new Artifact();
+//    artifact.setArtifactType("blueGem");
+//    artifact.setX(-5);
+//    artifact.setY(-5);
+//    artifact.setCharacter(null);
+//    getArtifactDao().create(artifact);
+//
+//    artifact = new Artifact();
+//    artifact.setArtifactType("redGem");
+//    artifact.setX(5);
+//    artifact.setY(5);
+//    artifact.setCharacter(null);
+//    getArtifactDao().create(artifact);
+//
+//    artifact = new Artifact();
+//    artifact.setArtifactType("pearl");
+//    artifact.setX(5);
+//    artifact.setY(-5);
+//    artifact.setCharacter(null);
+//    getArtifactDao().create(artifact);
+//
+//    artifact = new Artifact();
+//    artifact.setArtifactType("crystal");
+//    artifact.setX(0);
+//    artifact.setY(-5);
+//    artifact.setCharacter(null);
+//    getArtifactDao().create(artifact);
 
     Terrain terrain;
     for (int i = 0; i < 30; i++){

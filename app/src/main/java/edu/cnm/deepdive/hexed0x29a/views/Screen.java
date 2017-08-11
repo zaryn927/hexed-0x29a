@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
+
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -38,9 +39,10 @@ public class Screen extends SurfaceView implements Runnable {
 
   SurfaceHolder holder;
   Thread renderThread = null;
+
+
+
   volatile boolean isRunning = false;
-
-
   public void setUpPressed(boolean upPressed) {
     this.upPressed = upPressed;
   }
@@ -50,10 +52,10 @@ public class Screen extends SurfaceView implements Runnable {
   public void setRightPressed(boolean rightPressed) {
     this.rightPressed = rightPressed;
   }
+
   public void setLeftPressed(boolean leftPressed) {
     this.leftPressed = leftPressed;
   }
-
   private boolean upPressed;
   private boolean downPressed;
   private boolean rightPressed;
@@ -86,6 +88,45 @@ public class Screen extends SurfaceView implements Runnable {
     crystal = BitmapFactory.decodeResource(res, R.drawable.crystal);
     hourglass = BitmapFactory.decodeResource(res, R.drawable.hourglass);
     background = res.getDrawable(R.drawable.map);
+    try {
+      artifactDao = getHelper().getArtifactDao();
+      Artifact artifact = new Artifact();
+      artifact.setArtifactType("greenGem");
+      artifact.setX(2);
+      artifact.setY(13);
+      artifact.setCharacter(null);
+      artifactDao.create(artifact);
+
+      artifact = new Artifact();
+      artifact.setArtifactType("blueGem");
+      artifact.setX(16);
+      artifact.setY(-13);
+      artifact.setCharacter(null);
+      artifactDao.create(artifact);
+
+      artifact = new Artifact();
+      artifact.setArtifactType("redGem");
+      artifact.setX(-10);
+      artifact.setY(11);
+      artifact.setCharacter(null);
+      artifactDao.create(artifact);
+
+      artifact = new Artifact();
+      artifact.setArtifactType("pearl");
+      artifact.setX(16);
+      artifact.setY(10);
+      artifact.setCharacter(null);
+      artifactDao.create(artifact);
+
+      artifact = new Artifact();
+      artifact.setArtifactType("crystal");
+      artifact.setX(-17);
+      artifact.setY(-11);
+      artifact.setCharacter(null);
+      artifactDao.create(artifact);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   private synchronized OrmHelper getHelper() {
@@ -155,6 +196,7 @@ public class Screen extends SurfaceView implements Runnable {
         if (!collisionDetection((int)-(Math.ceil(x/100) + 1), (int)-Math.ceil(y/100), 1, 0)) {
           x -= moveDistance;
           updateCharacterLocation(character,x,y);
+//          }
         } else {
 //          x += moveDistance*moveDistance;
         }
@@ -162,6 +204,7 @@ public class Screen extends SurfaceView implements Runnable {
         if (!collisionDetection((int)-Math.floor(x/100), (int)-Math.ceil(y/100), -1, 0)) {
           x += moveDistance;
           updateCharacterLocation(character,x,y);
+//          }
         } else {
 //          x -= moveDistance*moveDistance;
         }
@@ -169,11 +212,9 @@ public class Screen extends SurfaceView implements Runnable {
 
       distFromCenter = Math.abs(x) + Math.abs(y);
       scale = distFromCenter / 500 + 1;
-      //moveDistance = 10 / scale;
       canvas.scale((float) scale, (float) scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
       canvas.translate((float) (x + (canvas.getWidth() / 2)), (float) (y + (canvas.getHeight() / 2)));
       background.draw(canvas);
-
       drawArtifacts(canvas, character, queryArtifacts());
       holder.unlockCanvasAndPost(canvas);
     }
@@ -192,9 +233,9 @@ public class Screen extends SurfaceView implements Runnable {
   }
 
   public void updateCharacterLocation(Char character, double x, double y){
-      character.setY((int)(y / 100));
+      character.setY((int)-Math.floor(y / 100)-1);
     Log.d("character", character.toString());
-      character.setX((int)(x / 100));
+      character.setX((int)-Math.floor(x / 100)-1);
     try {
       characterDao.update(character);
     } catch (SQLException e) {
@@ -254,7 +295,13 @@ public class Screen extends SurfaceView implements Runnable {
           bitmap = hourglass;
       }
       if(Math.abs(x - charX) < 0.1 && Math.abs(y - charY) < 0.1) {
-        artifact.setCharacter(character);
+        try {
+          artifactDao = getHelper().getArtifactDao();
+          artifact.setCharacter(character);
+          artifactDao.update(artifact);
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
       } else {
         canvas.drawBitmap(bitmap, x * 100, y * 100, null);
         Log.d("artifact", artifact.toString());

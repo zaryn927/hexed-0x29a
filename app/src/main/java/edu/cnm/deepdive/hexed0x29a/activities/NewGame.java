@@ -93,7 +93,6 @@ public class NewGame extends Activity {
           case MotionEvent.ACTION_UP:
             ((Screen)findViewById(R.id.screenView)).setDownPressed(false);
             walk.stop();
-            return true;
         }
         return false;
       }
@@ -116,7 +115,6 @@ public class NewGame extends Activity {
           case MotionEvent.ACTION_UP:
             ((Screen)findViewById(R.id.screenView)).setRightPressed(false);
             walk.stop();
-            return true;
         }
         return false;
       }

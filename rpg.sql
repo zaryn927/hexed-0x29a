@@ -6,6 +6,7 @@ CREATE TABLE Player (
     y               INTEGER NOT NULL DEFAULT 0,
     timer           LONG NOT NULL,
     score           INTEGER NOT NULL DEFAULT 0,
+    size            INTEGER NOT NULL,
     finished        BOOLEAN NOT NULL DEFAULT FALSE
 );
 

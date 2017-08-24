@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="edu.cnm.deepdive.hexed0x29a">
+  package="edu.cnm.deepdive.hexed0x29a_demo">
 
   <application
     android:allowBackup="true"
@@ -11,7 +11,7 @@
     android:theme="@style/AppTheme">
     <activity
       android:label="@string/app_name"
-      android:name=".activities.TitleScreen"
+      android:name="edu.cnm.deepdive.hexed0x29a_demo.activities.TitleScreen"
       android:screenOrientation="landscape">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -20,25 +20,25 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".activities.NewGame"
+      android:name="edu.cnm.deepdive.hexed0x29a_demo.activities.NewGame"
       android:screenOrientation="landscape" />
     <activity
       android:label="@string/options_screen"
-      android:name=".activities.Options"
+      android:name="edu.cnm.deepdive.hexed0x29a_demo.activities.Options"
       android:screenOrientation="landscape" />
     <activity
       android:label="@string/credits_screen"
-      android:name=".activities.Credits"
+      android:name="edu.cnm.deepdive.hexed0x29a_demo.activities.Credits"
       android:screenOrientation="landscape" />
     <activity
       android:label="@string/pause_screen"
-      android:name=".activities.Pause"
+      android:name="edu.cnm.deepdive.hexed0x29a_demo.activities.Pause"
       android:screenOrientation="landscape" />
     <activity
-      android:name=".activities.AndroidDatabaseManager"
+      android:name="edu.cnm.deepdive.hexed0x29a_demo.activities.AndroidDatabaseManager"
       android:theme="@style/Theme.AppCompat.Light" />
-    <activity android:name=".activities.TestActivity" />
-    <activity android:name=".activities.DataEntryActivity" />
+    <activity android:name="edu.cnm.deepdive.hexed0x29a_demo.activities.TestActivity" />
+    <activity android:name="edu.cnm.deepdive.hexed0x29a_demo.activities.DataEntryActivity" />
   </application>
 
 </manifest>

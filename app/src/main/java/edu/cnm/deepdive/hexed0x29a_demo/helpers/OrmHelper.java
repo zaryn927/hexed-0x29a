@@ -1,6 +1,4 @@
-package edu.cnm.deepdive.hexed0x29a.helpers;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+package edu.cnm.deepdive.hexed0x29a_demo.helpers;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,20 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import edu.cnm.deepdive.hexed0x29a.R;
-import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
-import edu.cnm.deepdive.hexed0x29a.entities.ArtifactType;
-import edu.cnm.deepdive.hexed0x29a.entities.Char;
-import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
-import edu.cnm.deepdive.hexed0x29a.entities.TerrainType;
+import edu.cnm.deepdive.hexed0x29a_demo.entities.Artifact;
+import edu.cnm.deepdive.hexed0x29a_demo.entities.ArtifactType;
+import edu.cnm.deepdive.hexed0x29a_demo.entities.Char;
+import edu.cnm.deepdive.hexed0x29a_demo.entities.Terrain;
+import edu.cnm.deepdive.hexed0x29a_demo.entities.TerrainType;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by zaryn on 7/27/2017.

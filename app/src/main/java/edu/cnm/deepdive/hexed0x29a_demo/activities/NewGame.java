@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.hexed0x29a.activities;
+package edu.cnm.deepdive.hexed0x29a_demo.activities;
 
 import android.app.Activity;
 
@@ -13,8 +13,8 @@ import android.widget.Button;
 
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import edu.cnm.deepdive.hexed0x29a.R;
-import edu.cnm.deepdive.hexed0x29a.views.Screen;
+import edu.cnm.deepdive.hexed0x29a_demo.R;
+import edu.cnm.deepdive.hexed0x29a_demo.views.Screen;
 
 public class NewGame extends Activity {
 

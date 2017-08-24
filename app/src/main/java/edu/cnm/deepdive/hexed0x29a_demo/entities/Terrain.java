@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.hexed0x29a.entities;
+package edu.cnm.deepdive.hexed0x29a_demo.entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

@@ -1,22 +1,16 @@
-package edu.cnm.deepdive.hexed0x29a.activities;
+package edu.cnm.deepdive.hexed0x29a_demo.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import edu.cnm.deepdive.hexed0x29a.R;
-import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
-import android.widget.RelativeLayout;
+import edu.cnm.deepdive.hexed0x29a_demo.R;
+import edu.cnm.deepdive.hexed0x29a_demo.helpers.OrmHelper;
 
 public class TitleScreen extends AppCompatActivity {
 
@@ -41,7 +35,7 @@ public class TitleScreen extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         try {
-          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a.activities.NewGame");
+          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a_demo.activities.NewGame");
           Intent intent = new Intent(TitleScreen.this, activity);
           startActivity(intent);
         } catch (ClassNotFoundException e) {
@@ -54,7 +48,7 @@ public class TitleScreen extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         try {
-          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a.activities.TestActivity");
+          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a_demo.activities.TestActivity");
           Intent intent = new Intent(TitleScreen.this, activity);
           startActivity(intent);
         } catch (ClassNotFoundException e) {
@@ -67,7 +61,7 @@ public class TitleScreen extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         try {
-          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a.activities.Credits");
+          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a_demo.activities.Credits");
           Intent intent = new Intent(TitleScreen.this, activity);
           startActivity(intent);
         } catch (ClassNotFoundException e) {

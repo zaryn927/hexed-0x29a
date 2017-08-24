@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">Hexed 0x29A</string>
+  <string name="app_name">Hexed 0x29A Demo</string>
   <string name="pause_screen">Pause Menu</string>
   <string name="credits_screen">Credits</string>
   <string name="options_screen">Options</string>

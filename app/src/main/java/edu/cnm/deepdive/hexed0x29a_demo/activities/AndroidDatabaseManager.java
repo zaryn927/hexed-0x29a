@@ -1,9 +1,9 @@
-package edu.cnm.deepdive.hexed0x29a.activities;
+package edu.cnm.deepdive.hexed0x29a_demo.activities;
 
 
 
 //all required import files
-import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
+import edu.cnm.deepdive.hexed0x29a_demo.helpers.OrmHelper;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import android.app.Activity;

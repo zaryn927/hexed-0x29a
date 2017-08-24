@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.hexed0x29a.views;
+package edu.cnm.deepdive.hexed0x29a_demo.views;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -20,11 +20,11 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import com.j256.ormlite.stmt.QueryBuilder;
-import edu.cnm.deepdive.hexed0x29a.R;
-import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
-import edu.cnm.deepdive.hexed0x29a.entities.Char;
-import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
-import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
+import edu.cnm.deepdive.hexed0x29a_demo.R;
+import edu.cnm.deepdive.hexed0x29a_demo.entities.Artifact;
+import edu.cnm.deepdive.hexed0x29a_demo.entities.Char;
+import edu.cnm.deepdive.hexed0x29a_demo.entities.Terrain;
+import edu.cnm.deepdive.hexed0x29a_demo.helpers.OrmHelper;
 
 import java.sql.SQLException;
 import java.util.List;

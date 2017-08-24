@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.hexed0x29a;
+package edu.cnm.deepdive.hexed0x29a_demo;
 
 import org.junit.Test;
 

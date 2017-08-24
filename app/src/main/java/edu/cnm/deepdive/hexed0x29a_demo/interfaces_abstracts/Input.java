@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.hexed0x29a.interfaces_abstracts;
+package edu.cnm.deepdive.hexed0x29a_demo.interfaces_abstracts;
 
 import java.util.List;
 /**

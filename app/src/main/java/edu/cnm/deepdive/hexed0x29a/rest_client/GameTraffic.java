@@ -44,7 +44,7 @@ public class GameTraffic {
       dbHelper = null;
     }
   }
-  public GameTraffic getInstance(Context context){
+  public static GameTraffic getInstance(Context context){
     if (instance == null){
       instance = new GameTraffic(context);
     }
@@ -62,20 +62,20 @@ public class GameTraffic {
       connection.setRequestProperty("Content-Type", "application/json");
       connection.getOutputStream().write(payload.getBytes());
     }
-
+    //TODO check http status (value depends on http method)
     InputStream input = connection.getInputStream();
     InputStreamReader reader = new InputStreamReader(input);
 
     return reader;
   }
 
-  public void newGame(final int genGame) { //changed from hoodSize
+  public void newGame(final int size) { //changed from hoodSize
     Runnable task = new Runnable() {
       @Override
       public void run() {
         try {
           Game game = new Game();
-          game.size = genGame;
+          game.size = size;
           game = gson.fromJson(serverCom(gson.toJson(game), context.getResources().getString(R.string.base_url)
             +context.getResources().getString(R.string.post_game) , "POST"), Game.class);
           // TODO write tile objects from game to database (local entities)
@@ -103,26 +103,35 @@ public class GameTraffic {
     new Thread(task).start();
   }
 
-  public void gameUpdate(final int update) { //added getters and setters
+  public void gameUpdate(final Integer x, final Integer y, final Integer score, final Boolean finished, final String playerName) { //added getters and setters
     Runnable task = new Runnable() {
       @Override
       public void run() {
+        boolean locationUpdate = false;
         try {
-          Object payload = new Object() {
-            @Expose
-            private
-            int score = 0;
-            private int x = 0;
-            private int y = 0;
-            private String playerName = "";
-            private boolean finished = false;
+          Game game = new Game();
+          if (x != null){
+            game.x = x;
+            locationUpdate = true;
+          }
+          if (y != null){
+            game.y = y;
+            locationUpdate = true;
+          }
+          if (score != null) {
+            game.score = score;
+          }
+          if (finished != null) {
+            game.finished = finished;
+          }
+          if (playerName != null) {
+            game.player = playerName;
+          }
 
-
-          };
           // TODO create game class for deserialization
-          serverCom(gson.toJson(payload), context.getResources().getString(R.string.base_url)
+          serverCom(gson.toJson(game), context.getResources().getString(R.string.base_url)
               +context.getResources().getString(R.string.put_game), "PUT");
-
+          //TODO if (locationUpdate) {sleep some interval then get the neighborhood}
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);

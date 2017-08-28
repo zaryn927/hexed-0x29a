@@ -14,10 +14,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import edu.cnm.deepdive.hexed0x29a.R;
+import edu.cnm.deepdive.hexed0x29a.rest_client.GameTraffic;
 import edu.cnm.deepdive.hexed0x29a.views.Screen;
 
 public class NewGame extends Activity {
-
+  static final int NEIGHBORHOOD_SIZE = 50;
   Button upButton;
   Button downButton;
   Button rightButton;
@@ -31,11 +32,14 @@ public class NewGame extends Activity {
 
   AnimationDrawable walk;
 
+  GameTraffic gameTraffic = GameTraffic.getInstance(this);
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,LayoutParams.FLAG_FULLSCREEN);
     super.onCreate(savedInstanceState);
+    gameTraffic.newGame(NEIGHBORHOOD_SIZE);
     setContentView(R.layout.activity_game);
 
     backView = (ImageView)findViewById(R.id.backView) ;

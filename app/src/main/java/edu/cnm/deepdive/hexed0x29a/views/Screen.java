@@ -26,6 +26,7 @@ import edu.cnm.deepdive.hexed0x29a.entities.Char;
 import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
 import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
 
+import edu.cnm.deepdive.hexed0x29a.rest_client.GameTraffic;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -34,7 +35,7 @@ import java.util.List;
  */
 
 public class Screen extends SurfaceView implements Runnable {
-
+  static final int UPDATE_INTERVAL = 30;
   Drawable background;
 
   SurfaceHolder holder;
@@ -52,7 +53,6 @@ public class Screen extends SurfaceView implements Runnable {
   public void setRightPressed(boolean rightPressed) {
     this.rightPressed = rightPressed;
   }
-
   public void setLeftPressed(boolean leftPressed) {
     this.leftPressed = leftPressed;
   }
@@ -170,7 +170,7 @@ public class Screen extends SurfaceView implements Runnable {
     double distFromCenter = 0;
     double scale = 1;
     double moveDistance = 10 ;
-
+    long tickCounter = 0;
     while(isRunning) {
 
       if (!holder.getSurface().isValid()) {
@@ -179,34 +179,24 @@ public class Screen extends SurfaceView implements Runnable {
       Canvas canvas = holder.lockCanvas();
 
       if (upPressed) {
-          if (!collisionDetection((int)-Math.ceil(x/100), (int)-Math.floor(y/100), 0, -1)) {
+        if (!collisionDetection((int)-Math.ceil(x/100), (int)-Math.floor(y/100), 0, -1)) {
           y += moveDistance;
           updateCharacterLocation(character, x, y);
-        } else {
-//          y -= moveDistance*moveDistance;
         }
-      } else if (downPressed) {
+      }else if (downPressed) {
         if (!collisionDetection((int)-Math.ceil(x/100), (int)-(Math.ceil(y/100) + 1), 0, 1)) {
           y -= moveDistance;
           updateCharacterLocation(character, x, y);
-        } else {
-//          y += moveDistance*moveDistance;
         }
-      } else if (rightPressed) {
+      }else if (rightPressed) {
         if (!collisionDetection((int)-(Math.ceil(x/100) + 1), (int)-Math.ceil(y/100), 1, 0)) {
           x -= moveDistance;
           updateCharacterLocation(character,x,y);
-//          }
-        } else {
-//          x += moveDistance*moveDistance;
         }
-      } else if (leftPressed) {
+      }else if (leftPressed) {
         if (!collisionDetection((int)-Math.floor(x/100), (int)-Math.ceil(y/100), -1, 0)) {
           x += moveDistance;
           updateCharacterLocation(character,x,y);
-//          }
-        } else {
-//          x -= moveDistance*moveDistance;
         }
       }
 
@@ -217,6 +207,9 @@ public class Screen extends SurfaceView implements Runnable {
       background.draw(canvas);
       drawArtifacts(canvas, character, queryArtifacts());
       holder.unlockCanvasAndPost(canvas);
+      if (++tickCounter % UPDATE_INTERVAL == 0){
+        GameTraffic.getInstance(null).gameUpdate(character.getX(),character.getY(),null,null,null);
+      }
     }
   }
 

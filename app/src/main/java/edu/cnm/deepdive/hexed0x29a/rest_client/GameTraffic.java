@@ -61,6 +61,49 @@ public class GameTraffic {
     new Thread(task).start();
   }
 
+  public static void gameUpdate(final int hoodSize) {
+    Runnable task = new Runnable() {
+      @Override
+      public void run() {
+        try {
+          Object payload = new Object() {
+            @Expose
+            int size = hoodSize;
+          };
+          // TODO create game class for deserialization
+          serverCom(gson.toJson(payload), "put_game", "PUT");
+
+        } catch (IOException ex) {
+          throw new RuntimeException(ex);
+        }
+      }
+
+    };
+    new Thread(task).start();
+  }
+
+  public static void artCollected(boolean collected) {
+    Runnable task = new Runnable() {
+      @Override
+      public void run() {
+        try {
+          Object payload = new Object() {
+            @Expose
+            int size = hoodSize;
+          };
+          // TODO create game class for deserialization
+          serverCom(gson.toJson(payload), "put_artifact", "PUT");
+
+        } catch (IOException ex) {
+          throw new RuntimeException(ex);
+        }
+      }
+
+    };
+    new Thread(task).start();
+  }
+
+
   public static void gameIdentity(final int gameId) {
     Runnable task = new Runnable() {
       @Override
@@ -125,5 +168,7 @@ public class GameTraffic {
     };
     new Thread(task).start();
   }
+
+
 
 }

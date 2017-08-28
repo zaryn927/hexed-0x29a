@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -22,7 +23,6 @@ public class GameTraffic {
   private static Context context;
 
   private static Reader serverCom(String payload, String url, String httpMethod) throws IOException{
-
 
     HttpURLConnection connection = null;
     URL hexedUrl = new URL(url);
@@ -45,13 +45,12 @@ public class GameTraffic {
       @Override
       public void run() {
         try {
-          //TODO create payload
           Object payload = new Object() {
             @Expose
             int size = hoodSize;
           };
           // TODO create game class for deserialization
-        serverCom(gson.toJson(payload), url, "POST");
+        serverCom(gson.toJson(payload), "base_url", "POST");
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);
@@ -72,7 +71,7 @@ public class GameTraffic {
             @Expose
             int id = gameId;
           };
-          serverCom(gson.toJson(payload), url, "GET");
+          serverCom(gson.toJson(payload), "get_game", "GET");
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);
@@ -83,7 +82,7 @@ public class GameTraffic {
     new Thread(task).start();
 
   }
-  public static void newGame(final int gameSize) {
+  public static void HScores(final int highScores) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
@@ -91,10 +90,10 @@ public class GameTraffic {
           //TODO create payload
           Object payload = new Object() {
             @Expose
-            int size = gameSize;
+            int highScores =  new Array []hScores;
           };
           // TODO create game class for deserialization
-          serverCom(gson.toJson(payload), url, "POST");
+          serverCom(gson.toJson(payload), "get_all_games", "GET");
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);
@@ -105,7 +104,7 @@ public class GameTraffic {
     new Thread(task).start();
   }
 
-  public static void newGame(final int gameSize) {
+  public static void hoodGen(final int gameSize) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
@@ -116,7 +115,7 @@ public class GameTraffic {
             int size = gameSize;
           };
           // TODO create game class for deserialization
-          serverCom(gson.toJson(payload), url, "POST");
+          serverCom(gson.toJson(payload), "get_neighborhood", "GET");
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);

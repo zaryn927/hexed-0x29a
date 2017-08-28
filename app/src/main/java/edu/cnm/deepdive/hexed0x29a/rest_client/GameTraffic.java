@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -40,14 +39,24 @@ public class GameTraffic {
     return reader;
   }
 
-  public static void newGame(final int hoodSize) {
+  public static void newGame(final int genGame) { //changed from hoodSize
     Runnable task = new Runnable() {
       @Override
       public void run() {
         try {
           Object payload = new Object() {
+
             @Expose
-            int size = hoodSize;
+            private
+            int size = genGame;
+
+            public void setSize(int size) {
+              this.size = size;
+            }
+
+            public int getSize() {
+              return size;
+            }
           };
           // TODO create game class for deserialization
         serverCom(gson.toJson(payload), "base_url", "POST");
@@ -61,17 +70,64 @@ public class GameTraffic {
     new Thread(task).start();
   }
 
-  public static void gameUpdate(final int hoodSize) {
+  public static void gameUpdate(final int update) { //added getters and setters
     Runnable task = new Runnable() {
       @Override
       public void run() {
         try {
           Object payload = new Object() {
             @Expose
-            int size = hoodSize;
+            private
+            int score = 0;
+            private int x = 0;
+            private int y = 0;
+            private String playerName = "";
+            private boolean finished = false;
+
+            public void setFinished(boolean finished) {
+              this.finished = finished;
+            }
+
+            public boolean isFinished() {
+              return finished;
+            }
+
+            public void setPlayerName(String playerName) {
+              this.playerName = playerName;
+            }
+
+            public String getPlayerName() {
+              return playerName;
+            }
+
+            public void setY(int y) {
+              this.y = y;
+            }
+
+            public int getY() {
+              return y;
+            }
+
+            public void setX(int x) {
+              this.x = x;
+            }
+
+            public int getX() {
+              return x;
+            }
+
+            public void setScore(int score) {
+              this.score = score;
+            }
+
+            public int getScore() {
+              return score;
+            }
+
           };
           // TODO create game class for deserialization
           serverCom(gson.toJson(payload), "put_game", "PUT");
+
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);
@@ -89,7 +145,7 @@ public class GameTraffic {
         try {
           Object payload = new Object() {
             @Expose
-            int size = hoodSize;
+            boolean collected = false;
           };
           // TODO create game class for deserialization
           serverCom(gson.toJson(payload), "put_artifact", "PUT");
@@ -133,7 +189,7 @@ public class GameTraffic {
           //TODO create payload
           Object payload = new Object() {
             @Expose
-            int highScores =  new Array []hScores;
+            int[] highScores;
           };
           // TODO create game class for deserialization
           serverCom(gson.toJson(payload), "get_all_games", "GET");
@@ -147,7 +203,7 @@ public class GameTraffic {
     new Thread(task).start();
   }
 
-  public static void hoodGen(final int gameSize) {
+  public static void hoodGen(final int hoodSize) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
@@ -155,7 +211,7 @@ public class GameTraffic {
           //TODO create payload
           Object payload = new Object() {
             @Expose
-            int size = gameSize;
+            int size = hoodSize;
           };
           // TODO create game class for deserialization
           serverCom(gson.toJson(payload), "get_neighborhood", "GET");

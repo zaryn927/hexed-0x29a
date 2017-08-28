@@ -41,7 +41,7 @@ public class TitleScreen extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         try {
-          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a.activities.GameTraffic");
+          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a.activities.NewGame");
           Intent intent = new Intent(TitleScreen.this, activity);
           startActivity(intent);
           //newGame()
@@ -55,7 +55,7 @@ public class TitleScreen extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         try {
-          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a.activities.TestActivity");
+          Class activity = Class.forName("edu.cnm.deepdive.hexed0x29a.activities.Options");
           Intent intent = new Intent(TitleScreen.this, activity);
           startActivity(intent);
         } catch (ClassNotFoundException e) {

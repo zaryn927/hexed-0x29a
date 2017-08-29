@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import edu.cnm.deepdive.hexed0x29a.R;
+import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
 import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
 import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
 import java.io.IOException;
@@ -28,9 +29,10 @@ public class GameTraffic {
   private Context context;
   private OrmHelper dbHelper = null;
 
-  private GameTraffic(Context context){
+  private GameTraffic(Context context) {
     this.context = context;
   }
+
   private synchronized OrmHelper getHelper() {
     if (dbHelper == null) {
       dbHelper = OpenHelperManager.getHelper(context, OrmHelper.class);
@@ -44,14 +46,16 @@ public class GameTraffic {
       dbHelper = null;
     }
   }
-  public static GameTraffic getInstance(Context context){
-    if (instance == null){
+
+  public static GameTraffic getInstance(Context context) {
+    if (instance == null) {
       instance = new GameTraffic(context);
     }
     return instance;
   }
 
-  private static Reader serverCom(String payload, String url, String httpMethod) throws IOException{
+  private static Reader serverCom(String payload, String url, String httpMethod)
+      throws IOException {
 
     HttpURLConnection connection = null;
     URL hexedUrl = new URL(url);
@@ -69,52 +73,60 @@ public class GameTraffic {
     return reader;
   }
 
-  public void newGame(final int size) { //changed from hoodSize
-    Runnable task = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          Game game = new Game();
-          game.size = size;
-          game = gson.fromJson(serverCom(gson.toJson(game), context.getResources().getString(R.string.base_url)
-            +context.getResources().getString(R.string.post_game) , "POST"), Game.class);
-          // TODO write tile objects from game to database (local entities)
-          for (int i = 0; i < game.neighborhood.tiles.length; i++) {
-            for (int j = 0; j < game.neighborhood.tiles[i].length; j++) {
-              //TODO write contents of game.neighborhood.tiles[i][j] to database
-              Game.Neighborhood.Tile tile = game.neighborhood.tiles[i][j];
-              Terrain entity = new Terrain();
-              entity.setX(tile.x);
-              entity.setY(tile.y);
-              //TODO set remaining fields
-              try {
-                getHelper().getTerrainDao().create(entity);
-              } catch (SQLException e) {
-                e.printStackTrace();
-              }
+  public int newGame(final int size) { //changed from hoodSize
+    try {
+      Game game = new Game();
+      game.size = size;
+      game = gson
+          .fromJson(serverCom(gson.toJson(game), context.getResources().getString(R.string.base_url)
+              + context.getResources().getString(R.string.post_game), "POST"), Game.class);
+      // TODO write tile objects from game to database (local entities)
+      for (int i = 0; i < game.neighborhood.tiles.length; i++) {
+        for (int j = 0; j < game.neighborhood.tiles[i].length; j++) {
+          try {
+            //TODO write contents of game.neighborhood.tiles[i][j] to database
+            Game.Neighborhood.Tile tile = game.neighborhood.tiles[i][j];
+            Terrain entity = new Terrain();
+            entity.setX(tile.x);
+            entity.setY(tile.y);
+            if (tile.artifact != null) {
+              Artifact artifact = new Artifact();
+              artifact.setX(tile.x);
+              artifact.setY(tile.y);
+              artifact.setArtifactType(tile.artifact.type);
+              //artifact.setCollected(false);
+              getHelper().getArtifactDao().create(artifact);
+              entity.setArtifact(artifact);
             }
+            getHelper().getTerrainDao().create(entity);
+          } catch (SQLException e) {
+            e.printStackTrace();
           }
-        } catch (IOException ex) {
-          throw new RuntimeException(ex);
+          //TODO set remaining fields
         }
       }
-
-    };
-    new Thread(task).start();
+      return game.id;
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
-  public void gameUpdate(final Integer x, final Integer y, final Integer score, final Boolean finished, final String playerName) { //added getters and setters
+  //TODO return int current game id
+
+
+  public void gameUpdate(final Integer id, final Integer x, final Integer y, final Integer score,
+      final Boolean finished, final String playerName) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
         boolean locationUpdate = false;
         try {
           Game game = new Game();
-          if (x != null){
+          if (x != null) {
             game.x = x;
             locationUpdate = true;
           }
-          if (y != null){
+          if (y != null) {
             game.y = y;
             locationUpdate = true;
           }
@@ -128,10 +140,17 @@ public class GameTraffic {
             game.player = playerName;
           }
 
-          // TODO create game class for deserialization
           serverCom(gson.toJson(game), context.getResources().getString(R.string.base_url)
-              +context.getResources().getString(R.string.put_game), "PUT");
+              + String.format(context.getResources().getString(R.string.put_game), id), "PUT");
           //TODO if (locationUpdate) {sleep some interval then get the neighborhood}
+          if (locationUpdate) {
+            try {
+              Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+              ex.printStackTrace();
+            }
+          }
+          // TODO Get tiles
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);
@@ -142,17 +161,15 @@ public class GameTraffic {
     new Thread(task).start();
   }
 
-  public void artCollected(boolean collected) {
+  public void artCollected(final Boolean collected) { //game and artifact id
     Runnable task = new Runnable() {
       @Override
       public void run() {
         try {
-          Object payload = new Object() {
-            @Expose
-            boolean collected = false;
-          };
-          // TODO create game class for deserialization
-          serverCom(gson.toJson(payload), "put_artifact", "PUT");
+
+          // update local entity?
+          serverCom(gson.toJson(collected), context.getResources().getString(R.string.base_url)
+              + context.getResources().getString(R.string.put_artifact), "PUT");
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);
@@ -164,62 +181,18 @@ public class GameTraffic {
   }
 
 
-  public void gameIdentity(final int gameId) {
-    Runnable task = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          //TODO create payload
-          Object payload = new Object() {
-            @Expose
-            int id = gameId;
-          };
-          serverCom(gson.toJson(payload), "get_game", "GET");
-
-        } catch (IOException ex) {
-          throw new RuntimeException(ex);
-        }
-      }
-
-    };
-    new Thread(task).start();
-
-  }
-  public void HScores(final int highScores) {
-    Runnable task = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          //TODO create payload
-          Object payload = new Object() {
-            @Expose
-            int[] highScores;
-          };
-          // TODO create game class for deserialization
-          serverCom(gson.toJson(payload), "get_all_games", "GET");
-
-        } catch (IOException ex) {
-          throw new RuntimeException(ex);
-        }
-      }
-
-    };
-    new Thread(task).start();
-  }
-
-//  public void hoodGen(final int hoodSize) {
+//  public Integer gameIdentity(final Integer id) { // resume, syncrhonize, SHOW NICK
+//
 //    Runnable task = new Runnable() {
 //      @Override
 //      public void run() {
 //        try {
-//          //TODO create payload
-//          Object payload = new Object() {
-//            @Expose
-//            int size = hoodSize;
-//          };
-//          // TODO create game class for deserialization
-//          serverCom(gson.toJson(payload), "get_neighborhood", "GET");
 //
+//          Game game = gson
+//              .fromJson(serverCom(null, context.getResources().getString(R.string.base_url)
+//                  + context.getResources().getString(R.string.get_game), "GET"), Game.class);
+//          // TODO Update tiles & artifacts in local database, based on what was received. Ignore
+//          // TODO exceptions caused by unique key violations.
 //        } catch (IOException ex) {
 //          throw new RuntimeException(ex);
 //        }
@@ -227,8 +200,21 @@ public class GameTraffic {
 //
 //    };
 //    new Thread(task).start();
+//    return id;
 //  }
 
+  public Game[] HScores() {
+
+    try {
+      Game[] games = gson
+          .fromJson(serverCom(null, context.getResources().getString(R.string.base_url)
+              + context.getResources().getString(R.string.get_all_games), "GET"), Game[].class);
+
+      return games;
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
 
 
 }

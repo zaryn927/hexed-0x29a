@@ -9,7 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "ARTIFACT_TYPE")
 public class ArtifactType {
 
-  @DatabaseField(columnName = "ART_TYPE_ID", generatedId = true)
+  @DatabaseField(columnName = "ART_TYPE_ID", id = true)
   private int artTypeId;
 
   @DatabaseField(columnName = "ARTIFACT_NAME", width = 100, unique = true)

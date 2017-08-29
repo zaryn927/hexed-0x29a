@@ -2,6 +2,7 @@ package edu.cnm.deepdive.hexed0x29a.entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import edu.cnm.deepdive.hexed0x29a.rest_client.Game;
 
 /**
  * Created by zaryn on 7/26/2017.
@@ -9,7 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "TERRAIN")
 public class Terrain {
 
-  @DatabaseField(generatedId = true, columnName = "DUMMY_ID")
+  @DatabaseField(columnName = "DUMMY_ID", id = true)
   private long dummyId;
 
   @DatabaseField(uniqueCombo = true, columnName = "X_LOC", canBeNull = false)
@@ -23,6 +24,9 @@ public class Terrain {
 
   @DatabaseField(columnName = "OBSCURE", canBeNull = false)
   private boolean obscured;
+
+  @DatabaseField(columnName = "ARTIFACT_ID", foreign = true)
+  private Artifact artifact;
 //  @DatabaseField(columnName = "TERRAIN_TYPE", canBeNull = false, foreign = true)
 //  private TerrainType terrainType;
 
@@ -74,6 +78,14 @@ public class Terrain {
 
   public void setObscured(boolean obscured) {
     this.obscured = obscured;
+  }
+
+  public Artifact getArtifact() {
+    return artifact;
+  }
+
+  public void setArtifact(Artifact artifact) {
+    this.artifact = artifact;
   }
 
   //  public TerrainType getTerrainType() {

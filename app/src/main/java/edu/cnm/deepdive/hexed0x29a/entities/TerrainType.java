@@ -10,7 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "TERRAIN_TYPE")
 public class TerrainType {
 
-  @DatabaseField(columnName = "TERRAIN_TYPE_ID", generatedId = true)
+  @DatabaseField(columnName = "TERRAIN_TYPE_ID", id = true)
   private int id;
 
   @DatabaseField(columnName = "TERRAIN_NAME", width = 100)

@@ -9,7 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "ARTIFACT")
 public class Artifact {
 
-  @DatabaseField(columnName = "ARTIFACT_ID", generatedId = true)
+  @DatabaseField(columnName = "ARTIFACT_ID", id = true)
   private int id;
 
   @DatabaseField(columnName = "X_LOC")
@@ -18,7 +18,7 @@ public class Artifact {
   @DatabaseField(columnName = "Y_LOC")
   private int y;
 
-  @DatabaseField(columnName = "CHAR_ID", foreign = true)
+  @DatabaseField(columnName = "CHAR_ID", foreign = true, canBeNull = true)//TODO change to boolean collected
   private Char character;
 
   @DatabaseField(columnName = "ARTIFACT_TYPE", canBeNull = false)

@@ -13,6 +13,6 @@
   <string name="get_game">/games/%d/</string>
   <string name="put_game">/games/%d</string>
   <string name="get_all_games">/games</string>
-  <string name="put_artifact" formatted="false">/games/%d/artifacts/%d</string>
+  <string name="put_artifact" formatted="false">/games/%d/artifacts/%d/collected</string>
   <string name="get_neighborhood">/games/%d/player/neighborhood</string>
 </resources>

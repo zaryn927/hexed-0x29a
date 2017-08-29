@@ -11,7 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "CHAR")
 public class Char {
 
-  @DatabaseField(columnName = "CHAR_ID", generatedId = true)
+  @DatabaseField(columnName = "CHAR_ID", id = true)
   private int id;
 
   @DatabaseField(columnName = "PLAYER_NAME", width = 100, unique = true)

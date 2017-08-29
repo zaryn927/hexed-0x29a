@@ -21,6 +21,7 @@ import com.j256.ormlite.dao.Dao;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 import edu.cnm.deepdive.hexed0x29a.R;
+import edu.cnm.deepdive.hexed0x29a.activities.NewGame;
 import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
 import edu.cnm.deepdive.hexed0x29a.entities.Char;
 import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
@@ -72,12 +73,13 @@ public class Screen extends SurfaceView implements Runnable {
   Bitmap pearl;
   Bitmap crystal;
   Bitmap hourglass;
-
+  Context context;
 
 
 
   public Screen(Context context, AttributeSet attrs) {
     super(context, attrs);
+    this.context = context;
     setWillNotDraw(false);
     holder = getHolder();
     res = this.getResources();
@@ -208,7 +210,7 @@ public class Screen extends SurfaceView implements Runnable {
       drawArtifacts(canvas, character, queryArtifacts());
       holder.unlockCanvasAndPost(canvas);
       if (++tickCounter % UPDATE_INTERVAL == 0){
-        GameTraffic.getInstance(null).gameUpdate(character.getX(),character.getY(),null,null,null);
+        GameTraffic.getInstance(null).gameUpdate(((NewGame)context).gameId, character.getX(),character.getY(),null,null,null);
       }
     }
   }

@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@color/black_overlay"
-  tools:context="edu.cnm.deepdive.hexed0x29a.activities.Options">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_overlay"
+    tools:background="@android:color/black"
+    tools:context="edu.cnm.deepdive.hexed0x29a.activities.Options">
 
     <ListView
         android:id="@+id/high_scores"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_margin="150dp"
+        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintTop_toBottomOf="parent">
 
     </ListView>

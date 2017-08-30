@@ -32,15 +32,15 @@ public class Options extends AppCompatActivity {
 
   private void requestData() {
     GameTraffic traffic = GameTraffic.getInstance(null);
- //   traffic.HScores(this);
-    // test code to be removed later
-    games = new Game[5];
-    for (int i = 0; i < games.length; i++) {
-      Game game = new Game();
-      game.player = "test" + i;
-      game.score = i * i;
-      games[i] = game;
-    }
+    traffic.HScores(this);
+//     test code to be removed later
+//    games = new Game[5];
+//    for (int i = 0; i < games.length; i++) {
+//      Game game = new Game();
+//      game.player = "test" + i;
+//      game.score = i * i;
+//      games[i] = game;
+//    }
     //end of test code
     while (getGames() == null) {
       try {

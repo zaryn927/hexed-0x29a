@@ -21,6 +21,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import edu.cnm.deepdive.hexed0x29a.R;
 import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
 import android.widget.RelativeLayout;
+import edu.cnm.deepdive.hexed0x29a.rest_client.GameTraffic;
 
 public class TitleScreen extends AppCompatActivity {
 
@@ -34,10 +35,7 @@ public class TitleScreen extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_title_screen);
 
-    doBindService();
-    Intent music = new Intent();
-    music.setClass(this,MusicService.class);
-    startService(music);
+    GameTraffic.getInstance(this);
 
 
     final ImageButton newGame = (ImageButton)findViewById(R.id.newGameButton);
@@ -116,6 +114,16 @@ public class TitleScreen extends AppCompatActivity {
       unbindService(sCon);
       mIsBound = false;
     }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    doBindService();
+    Intent music = new Intent();
+    music.putExtra(MusicService.TRACK_ID_KEY, R.raw.title_theme);
+    music.setClass(this,MusicService.class);
+    startService(music);
   }
 
   @Override

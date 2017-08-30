@@ -25,7 +25,7 @@ public class NewGame extends Activity {
   Button leftButton;
   ImageButton pauseButton;
 
-  private Integer gameId;
+  private Integer gameId = null;
 
   public synchronized Integer getGameId() {
     return gameId;
@@ -49,7 +49,14 @@ public class NewGame extends Activity {
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,LayoutParams.FLAG_FULLSCREEN);
     super.onCreate(savedInstanceState);
-    gameTraffic.newGame(NEIGHBORHOOD_SIZE);
+    gameTraffic.newGame(NEIGHBORHOOD_SIZE, this);
+    while (getGameId() == null) {
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException ex) {
+        // Do nothing
+      }
+    }
     setContentView(R.layout.activity_game);
 
     backView = (ImageView)findViewById(R.id.backView) ;

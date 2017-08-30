@@ -17,9 +17,9 @@ import edu.cnm.deepdive.hexed0x29a.R;
  */
 
 public class MusicService extends Service implements MediaPlayer.OnErrorListener {
-
+    public static final String TRACK_ID_KEY = "edu.cnm.deepdive.hexed0x29a.trackId";
     private final IBinder mBinder = new ServiceBinder();
-    MediaPlayer mPlayer;
+    MediaPlayer mPlayer = null;
     private int length = 0;
 
     public MusicService() {
@@ -40,8 +40,14 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
     public void onCreate() {
         super.onCreate();
 
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         // created raw directory, placed mp3 into it.
-        mPlayer = MediaPlayer.create(this, R.raw.two_heads);
+        int trackId = intent.getIntExtra(TRACK_ID_KEY, R.raw.title_theme);
+        mPlayer = MediaPlayer.create(this, trackId);
         mPlayer.setOnErrorListener(this);
 
         if (mPlayer != null) {
@@ -53,22 +59,18 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
         mPlayer.setOnErrorListener(new OnErrorListener() {
 
             public boolean onError(MediaPlayer mp, int what, int
-                    extra) {
+                extra) {
 
                 onError(mPlayer, what, extra);
                 return true;
             }
         });
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
         mPlayer.start();
         return START_STICKY;
     }
 
     public void pauseMusic() {
-        if (mPlayer.isPlaying()) {
+        if (mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.pause();
             length = mPlayer.getCurrentPosition();
 
@@ -76,16 +78,18 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
     }
 
     public void resumeMusic() {
-        if (mPlayer.isPlaying() == false) {
+        if (mPlayer != null && mPlayer.isPlaying() == false) {
             mPlayer.seekTo(length);
             mPlayer.start();
         }
     }
 
     public void stopMusic() {
-        mPlayer.stop();
-        mPlayer.release();
-        mPlayer = null;
+        if(mPlayer != null) {
+            mPlayer.stop();
+            mPlayer.release();
+            mPlayer = null;
+        }
     }
 
     @Override

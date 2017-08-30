@@ -13,6 +13,7 @@ import edu.cnm.deepdive.hexed0x29a.activities.Options;
 import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
 import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
 import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -251,13 +252,38 @@ public class GameTraffic {
     Runnable task = new Runnable() {
       @Override
       public void run() {
+        Reader reader = null;
+        BufferedReader buffer = null;
         try {
-          Game[] games = gson
-              .fromJson(serverCom(null, context.getResources().getString(R.string.base_url)
-                  + context.getResources().getString(R.string.get_all_games), "GET"), Game[].class);
+          reader = serverCom(null, context.getResources().getString(R.string.base_url)
+              + context.getResources().getString(R.string.get_all_games), "GET");
+          buffer = new BufferedReader(reader);
+          StringBuilder builder = new StringBuilder();
+          String line;
+          while ((line = buffer.readLine()) != null) {
+            builder.append(line);
+            builder.append("\n");
+          }
+          String payload = builder.toString().trim();
+          Game[] games = gson.fromJson(payload, Game[].class);
           scoreContext.setGames(games);
         } catch (IOException ex) {
           throw new RuntimeException(ex);
+        } finally {
+          if (buffer != null) {
+            try {
+              buffer.close();
+            } catch (IOException ex) {
+              // Do nothing
+            }
+          }
+          if (reader != null) {
+            try {
+              reader.close();
+            } catch (IOException ex) {
+              // Do nothing
+            }
+          }
         }
       }
     };

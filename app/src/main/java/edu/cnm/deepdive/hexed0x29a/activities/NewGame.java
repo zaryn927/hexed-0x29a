@@ -25,7 +25,15 @@ public class NewGame extends Activity {
   Button leftButton;
   ImageButton pauseButton;
 
-  public Integer gameId;
+  private Integer gameId;
+
+  public Integer getGameId() {
+    return gameId;
+  }
+
+  public void setGameId(Integer gameId) {
+    this.gameId = gameId;
+  }
 
   ImageView backView;
   ImageView frontView;
@@ -41,7 +49,7 @@ public class NewGame extends Activity {
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,LayoutParams.FLAG_FULLSCREEN);
     super.onCreate(savedInstanceState);
-    gameId = gameTraffic.newGame(NEIGHBORHOOD_SIZE);
+    gameTraffic.newGame(NEIGHBORHOOD_SIZE);
     setContentView(R.layout.activity_game);
 
     backView = (ImageView)findViewById(R.id.backView) ;

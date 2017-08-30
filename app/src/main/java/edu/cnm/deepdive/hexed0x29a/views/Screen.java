@@ -210,7 +210,7 @@ public class Screen extends SurfaceView implements Runnable {
       drawArtifacts(canvas, character, queryArtifacts());
       holder.unlockCanvasAndPost(canvas);
       if (++tickCounter % UPDATE_INTERVAL == 0){
-        GameTraffic.getInstance(null).gameUpdate(((NewGame)context).gameId, character.getX(),character.getY(),null,null,null);
+        GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null);
       }
     }
   }

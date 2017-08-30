@@ -18,8 +18,10 @@ public class Artifact {
   @DatabaseField(columnName = "Y_LOC")
   private int y;
 
-  @DatabaseField(columnName = "CHAR_ID", foreign = true, canBeNull = true)//TODO change to boolean collected
-  private Char character;
+  //  @DatabaseField(columnName = "CHAR_ID", foreign = true, canBeNull = true)//TODO change to boolean collected
+//  private Char character;
+  @DatabaseField(columnName = "COLLECTED", canBeNull = false, defaultValue = "false")
+  private boolean collected;
 
   @DatabaseField(columnName = "ARTIFACT_TYPE", canBeNull = false)
   private String artifactType;
@@ -35,6 +37,14 @@ public class Artifact {
   @Override
   public String toString() {
     return x +", "+y;
+  }
+
+  public boolean isCollected() {
+    return collected;
+  }
+
+  public void setCollected(boolean collected) {
+    this.collected = collected;
   }
 
   public int getId() {
@@ -73,11 +83,11 @@ public class Artifact {
 //    this.inUse = inUse;
 //  }
 
-  public Char getCharacter() {
-    return character;
-  }
-
-  public void setCharacter(Char character) {
-    this.character = character;
-  }
+//  public Char getCharacter() {
+//    return character;
+//  }
+//
+//  public void setCharacter(Char character) {
+//    this.character = character;
+//  }
 }

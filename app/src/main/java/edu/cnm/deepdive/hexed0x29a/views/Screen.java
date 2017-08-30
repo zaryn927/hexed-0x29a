@@ -96,35 +96,35 @@ public class Screen extends SurfaceView implements Runnable {
       artifact.setArtifactType("greenGem");
       artifact.setX(2);
       artifact.setY(13);
-      artifact.setCharacter(null);
+//      artifact.setCharacter(null);
       artifactDao.create(artifact);
 
       artifact = new Artifact();
       artifact.setArtifactType("blueGem");
       artifact.setX(16);
       artifact.setY(-13);
-      artifact.setCharacter(null);
+//      artifact.setCharacter(null);
       artifactDao.create(artifact);
 
       artifact = new Artifact();
       artifact.setArtifactType("redGem");
       artifact.setX(-10);
       artifact.setY(11);
-      artifact.setCharacter(null);
+//      artifact.setCharacter(null);
       artifactDao.create(artifact);
 
       artifact = new Artifact();
       artifact.setArtifactType("pearl");
       artifact.setX(16);
       artifact.setY(10);
-      artifact.setCharacter(null);
+//      artifact.setCharacter(null);
       artifactDao.create(artifact);
 
       artifact = new Artifact();
       artifact.setArtifactType("crystal");
       artifact.setX(-17);
       artifact.setY(-11);
-      artifact.setCharacter(null);
+//      artifact.setCharacter(null);
       artifactDao.create(artifact);
     } catch (SQLException e) {
       e.printStackTrace();
@@ -255,7 +255,7 @@ public class Screen extends SurfaceView implements Runnable {
     try {
       artifactDao = getHelper().getArtifactDao();
       QueryBuilder<Artifact, Integer> queryBuilder = artifactDao.queryBuilder();
-      artifacts = queryBuilder.where().isNull("CHAR_ID").query();
+      artifacts = queryBuilder.where().eq("COLLECTED", false).query();
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -292,7 +292,7 @@ public class Screen extends SurfaceView implements Runnable {
       if(Math.abs(x - charX) < 0.1 && Math.abs(y - charY) < 0.1) {
         try {
           artifactDao = getHelper().getArtifactDao();
-          artifact.setCharacter(character);
+          artifact.setCollected(true);
           artifactDao.update(artifact);
         } catch (SQLException e) {
           e.printStackTrace();

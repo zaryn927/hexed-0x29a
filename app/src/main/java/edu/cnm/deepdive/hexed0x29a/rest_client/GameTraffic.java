@@ -31,7 +31,7 @@ public class GameTraffic {
   private Context context;
   private OrmHelper dbHelper = null;
 
-  private GameTraffic(Context context) {
+  public GameTraffic(Context context) {
     this.context = context;
   }
 

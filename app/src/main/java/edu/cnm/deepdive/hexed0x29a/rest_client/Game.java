@@ -32,10 +32,14 @@ public class Game {
   
   @Expose
   public Neighborhood neighborhood;
-  
+
   @Expose
   public Game.Artifact[] artifacts;
 
+  @Override
+  public String toString() {
+    return ((player != null) ? player : "(none)") + " - " + ((score != null) ? score : 0);
+  }
   public static class Artifact{
     @Expose
     public String type;

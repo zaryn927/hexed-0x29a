@@ -5,7 +5,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 import edu.cnm.deepdive.hexed0x29a.R;
+import edu.cnm.deepdive.hexed0x29a.activities.NewGame;
 import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
 import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
 import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
@@ -24,7 +26,7 @@ import java.sql.SQLException;
 
 public class GameTraffic {
 
-  private static GameTraffic instance = null;
+  public static GameTraffic instance = null;
   public Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
   private Context context;
   private OrmHelper dbHelper = null;
@@ -109,6 +111,7 @@ public class GameTraffic {
               //TODO set remaining fields
             }
           }
+          ((NewGame) context).setGameId(game.id);
         } catch (IOException ex) {
           throw new RuntimeException(ex);
         }
@@ -166,11 +169,15 @@ public class GameTraffic {
 
   }
 
-  public void artCollected(final Boolean collected) { //game and artifact id
+  public void artCollected(final Integer gameId, final Integer artifactId, final Boolean collected) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
         try {
+
+          Artifact artifact = new Artifact();
+          artifact.setCollected(collected);
+
 
           // update local entity?
           serverCom(gson.toJson(collected), context.getResources().getString(R.string.base_url)
@@ -207,7 +214,7 @@ public class GameTraffic {
 //    return id;
 //  }
 
-  public void HScores() {
+  public void HScores(final Context scoreContext) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
@@ -215,6 +222,7 @@ public class GameTraffic {
           Game[] games = gson
               .fromJson(serverCom(null, context.getResources().getString(R.string.base_url)
                   + context.getResources().getString(R.string.get_all_games), "GET"), Game[].class);
+          // ((ScoreActivity) scoreContext).someMethod(games);
         } catch (IOException ex) {
           throw new RuntimeException(ex);
         }

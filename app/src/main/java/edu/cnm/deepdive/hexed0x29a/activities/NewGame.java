@@ -27,11 +27,11 @@ public class NewGame extends Activity {
 
   private Integer gameId;
 
-  public Integer getGameId() {
+  public synchronized Integer getGameId() {
     return gameId;
   }
 
-  public void setGameId(Integer gameId) {
+  public synchronized void setGameId(Integer gameId) {
     this.gameId = gameId;
   }
 

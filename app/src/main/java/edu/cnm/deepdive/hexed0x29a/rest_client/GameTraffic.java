@@ -6,8 +6,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import edu.cnm.deepdive.hexed0x29a.R;
 import edu.cnm.deepdive.hexed0x29a.activities.NewGame;
+import edu.cnm.deepdive.hexed0x29a.activities.Options;
 import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
 import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
 import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
@@ -75,7 +77,7 @@ public class GameTraffic {
     return reader;
   }
 
-  public void newGame(final int size) {
+  public void newGame(final int size, final NewGame gameContext) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
@@ -111,7 +113,7 @@ public class GameTraffic {
               //TODO set remaining fields
             }
           }
-          ((NewGame) context).setGameId(game.id);
+          gameContext.setGameId(game.id);
         } catch (IOException ex) {
           throw new RuntimeException(ex);
         }
@@ -119,7 +121,7 @@ public class GameTraffic {
     };
     new Thread(task).start();
   }
-
+// add to any method that needs a call back, i.e. new game  & hscores, params in those methods referring to activity that needs to be called back to
 
   public void gameUpdate(final Integer id, final Integer x, final Integer y, final Integer score,
       final Boolean finished, final String playerName) {
@@ -156,9 +158,37 @@ public class GameTraffic {
             } catch (InterruptedException ex) {
               ex.printStackTrace();
             }
-          }
-          // TODO Get tiles
+            game = gson
+                .fromJson(
+                    serverCom(null, context.getResources().getString(R.string.base_url)
+                            + String.format(context.getResources().getString(R.string.get_game), id),
+                        "GET"), Game.class);
 
+            for (int i = 0; i < game.neighborhood.tiles.length; i++) {
+              for (int j = 0; j < game.neighborhood.tiles[i].length; j++) {
+                try {
+                  //TODO write contents of game.neighborhood.tiles[i][j] to database
+                  Game.Neighborhood.Tile tile = game.neighborhood.tiles[i][j];
+                  Terrain entity = new Terrain();
+                  entity.setX(tile.x);
+                  entity.setY(tile.y);
+                  if (tile.artifact != null) {
+                    Artifact artifact = new Artifact();
+                    artifact.setX(tile.x);
+                    artifact.setY(tile.y);
+                    artifact.setArtifactType(tile.artifact.type);
+                    artifact.setCollected(false);
+                    getHelper().getArtifactDao().create(artifact);
+                    entity.setArtifact(artifact);
+                  }
+                  getHelper().getTerrainDao().create(entity);
+                } catch (SQLException e) {
+                  // do nothing
+                }
+                //TODO set remaining fields
+              }
+            }
+          }
         } catch (IOException ex) {
           throw new RuntimeException(ex);
         }
@@ -169,15 +199,15 @@ public class GameTraffic {
 
   }
 
-  public void artCollected(final Integer gameId, final Integer artifactId, final Boolean collected) {
+  public void artCollected(final Integer gameId, final Integer artifactId,
+      final Boolean collected) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
         try {
-
-          Artifact artifact = new Artifact();
+          Artifact artifact = getHelper().getArtifactDao().queryForId(artifactId);
           artifact.setCollected(collected);
-
+          getHelper().getArtifactDao().update(artifact);
 
           // update local entity?
           serverCom(gson.toJson(collected), context.getResources().getString(R.string.base_url)
@@ -185,7 +215,10 @@ public class GameTraffic {
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);
+        } catch (SQLException ex) {
+
         }
+
       }
 
     };
@@ -214,7 +247,7 @@ public class GameTraffic {
 //    return id;
 //  }
 
-  public void HScores(final Context scoreContext) {
+  public void HScores(final Options scoreContext) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
@@ -222,7 +255,7 @@ public class GameTraffic {
           Game[] games = gson
               .fromJson(serverCom(null, context.getResources().getString(R.string.base_url)
                   + context.getResources().getString(R.string.get_all_games), "GET"), Game[].class);
-          // ((ScoreActivity) scoreContext).someMethod(games);
+          scoreContext.setGames(games);
         } catch (IOException ex) {
           throw new RuntimeException(ex);
         }

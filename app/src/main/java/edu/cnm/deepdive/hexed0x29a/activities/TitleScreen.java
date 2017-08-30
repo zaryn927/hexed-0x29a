@@ -1,9 +1,13 @@
 package edu.cnm.deepdive.hexed0x29a.activities;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,12 +24,21 @@ import android.widget.RelativeLayout;
 
 public class TitleScreen extends AppCompatActivity {
 
+  private boolean mIsBound = false;
+  private MusicService mServ;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,LayoutParams.FLAG_FULLSCREEN);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_title_screen);
+
+    doBindService();
+    Intent music = new Intent();
+    music.setClass(this,MusicService.class);
+    startService(music);
+
 
     final ImageButton newGame = (ImageButton)findViewById(R.id.newGameButton);
     final ImageButton options = (ImageButton)findViewById(R.id.optionsButton);
@@ -78,7 +91,37 @@ public class TitleScreen extends AppCompatActivity {
     });
   }
 
+  private ServiceConnection sCon =new ServiceConnection(){
 
+    public void onServiceConnected(ComponentName name, IBinder
+            binder) {
+      mServ = ((MusicService.ServiceBinder)binder).getService();
+    }
 
+    public void onServiceDisconnected(ComponentName name) {
+      mServ = null;
+    }
+  };
 
+  void doBindService(){
+    bindService(new Intent(this,MusicService.class),
+            sCon, Context.BIND_AUTO_CREATE);
+    mIsBound = true;
+  }
+
+  void doUnbindService()
+  {
+    if(mIsBound)
+    {
+      unbindService(sCon);
+      mIsBound = false;
+    }
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mServ.stopMusic();
+    doUnbindService();
+  }
 }

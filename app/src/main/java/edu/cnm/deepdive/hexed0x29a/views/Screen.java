@@ -38,7 +38,7 @@ import java.util.List;
  */
 
 public class Screen extends SurfaceView implements Runnable {
-  static final int UPDATE_INTERVAL = 30;
+  static final int UPDATE_INTERVAL = 100;
   static final int WORLD_VIEW_SIZE = 50;
   Bitmap[][] background;
   Terrain[][] backgroundTiles;
@@ -199,11 +199,11 @@ public class Screen extends SurfaceView implements Runnable {
 
   @Override
   public void run() {
-    try {
-      characterDao = getHelper().getCharDao();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      characterDao = getHelper().getCharDao();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
     double x = 0.0;
     double y = 0.0;
     Char character = new Char();
@@ -305,11 +305,11 @@ public class Screen extends SurfaceView implements Runnable {
       character.setY((int)-Math.floor(y / 64)-1);
     Log.d("character", character.toString());
       character.setX((int)-Math.floor(x / 64)-1);
-    try {
-      characterDao.update(character);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      characterDao.update(character);
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
   }
 
   public boolean collisionDetection (int x, int y, int dx, int dy) {

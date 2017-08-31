@@ -116,7 +116,7 @@ public class OrmHelper extends OrmLiteSqliteOpenHelper {
   public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
     try {
       source = connectionSource;
-      TableUtils.createTable(connectionSource, Char.class);
+//      TableUtils.createTable(connectionSource, Char.class);
       TableUtils.createTable(connectionSource, Terrain.class);
       TableUtils.createTable(connectionSource, Artifact.class);
 //      TableUtils.createTable(connectionSource, TerrainType.class);

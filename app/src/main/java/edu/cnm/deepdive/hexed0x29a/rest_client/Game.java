@@ -42,6 +42,8 @@ public class Game {
   }
   public static class Artifact{
     @Expose
+    public Integer id;
+    @Expose
     public String type;
     @Expose
     public Boolean collected;

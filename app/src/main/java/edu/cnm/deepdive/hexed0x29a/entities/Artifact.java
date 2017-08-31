@@ -74,7 +74,12 @@ public class Artifact {
   public void setArtifactType(String artifactType) {
     this.artifactType = artifactType;
   }
-//
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  //
 //  public boolean isInUse() {
 //    return inUse;
 //  }

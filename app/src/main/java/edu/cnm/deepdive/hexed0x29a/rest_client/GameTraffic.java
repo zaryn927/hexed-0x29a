@@ -101,6 +101,7 @@ public class GameTraffic {
                 entity.setElevation(tile.elevation);
                 if (tile.artifact != null) {
                   Artifact artifact = new Artifact();
+                  artifact.setId(tile.artifact.id);
                   artifact.setX(tile.x);
                   artifact.setY(tile.y);
                   artifact.setArtifactType(tile.artifact.type);
@@ -177,6 +178,7 @@ public class GameTraffic {
                   entity.setElevation(tile.elevation);
                   if (tile.artifact != null) {
                     Artifact artifact = new Artifact();
+                    artifact.setId(tile.artifact.id);
                     artifact.setX(tile.x);
                     artifact.setY(tile.y);
                     artifact.setArtifactType(tile.artifact.type);

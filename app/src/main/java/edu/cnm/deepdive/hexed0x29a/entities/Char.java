@@ -38,8 +38,8 @@ public class Char {
 //  @DatabaseField(columnName = "STAMINA_RECHARGE_RATE", canBeNull = false)
 //  private double staminaRechargeRate;
 
-  @ForeignCollectionField(eager = false)
-  private ForeignCollection<Artifact> artifacts;
+//  @ForeignCollectionField(eager = false)
+//  private ForeignCollection<Artifact> artifacts;
 
   public Char(){
 
@@ -78,14 +78,14 @@ public class Char {
     this.y = y;
   }
 
-  public ForeignCollection<Artifact> getArtifacts() {
-    return artifacts;
-  }
-
-  public void setArtifacts(
-      ForeignCollection<Artifact> artifacts) {
-    this.artifacts = artifacts;
-  }
+//  public ForeignCollection<Artifact> getArtifacts() {
+//    return artifacts;
+//  }
+//
+//  public void setArtifacts(
+//      ForeignCollection<Artifact> artifacts) {
+//    this.artifacts = artifacts;
+//  }
 //  public boolean isNpc() {
 //    return npc;
 //  }

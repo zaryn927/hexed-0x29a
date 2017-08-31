@@ -131,7 +131,7 @@ public class Screen extends SurfaceView implements Runnable {
     for (int i = 0; i < WORLD_VIEW_SIZE; i++){
       for (int j = 0; j < WORLD_VIEW_SIZE; j++) {
         Terrain terrain = new Terrain();
-        double elevation = 0;
+        double elevation = -0.05;
         if (elevation < -0.6){
           background[i][j] = deepWater;
         }else if (elevation >= -0.6 && elevation < -0.1){
@@ -216,8 +216,8 @@ public class Screen extends SurfaceView implements Runnable {
     double y = 0.0;
     Char character = new Char();
 //    character.setName("Me");
-    character.setX((int) (x/100));
-    character.setY((int)(y/100));
+    character.setX((int) (x/64));
+    character.setY((int)(y/64));
 //    try {
 //      characterDao.create(character);
 //    } catch (SQLException e) {
@@ -235,25 +235,17 @@ public class Screen extends SurfaceView implements Runnable {
       Canvas canvas = holder.lockCanvas();
 
       if (upPressed) {
-        if (!collisionDetection((int)-Math.ceil(x/100), (int)-Math.floor(y/100), 0, -1)) {
           y += moveDistance;
           updateCharacterLocation(character, x, y);
-        }
       }else if (downPressed) {
-        if (!collisionDetection((int)-Math.ceil(x/100), (int)-(Math.ceil(y/100) + 1), 0, 1)) {
           y -= moveDistance;
           updateCharacterLocation(character, x, y);
-        }
       }else if (rightPressed) {
-        if (!collisionDetection((int)-(Math.ceil(x/100) + 1), (int)-Math.ceil(y/100), 1, 0)) {
           x -= moveDistance;
           updateCharacterLocation(character,x,y);
-        }
       }else if (leftPressed) {
-        if (!collisionDetection((int)-Math.floor(x/100), (int)-Math.ceil(y/100), -1, 0)) {
           x += moveDistance;
           updateCharacterLocation(character,x,y);
-        }
       }
 
 //      distFromCenter = Math.abs(x) + Math.abs(y);
@@ -266,7 +258,7 @@ public class Screen extends SurfaceView implements Runnable {
           canvas.drawBitmap(background[i][j], j*64 - canvas.getWidth() / 2, i*64 - canvas.getHeight() / 2,null);
         }
       }
-//      drawArtifacts(canvas, character, queryArtifacts()); //TODO fix server side (no artifacts)
+      drawArtifacts(canvas, character, queryArtifacts()); //TODO fix server side (no artifacts)
       holder.unlockCanvasAndPost(canvas);
       if (++tickCounter % UPDATE_INTERVAL == 0){
 //        GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null); //TODO fix game update (crashing app)
@@ -287,9 +279,9 @@ public class Screen extends SurfaceView implements Runnable {
   }
 
   public void updateCharacterLocation(Char character, double x, double y){
-      character.setY((int)-Math.floor(y / 100)-1);
+      character.setY((int)-Math.floor(y / 64)-1);
     Log.d("character", character.toString());
-      character.setX((int)-Math.floor(x / 100)-1);
+      character.setX((int)-Math.floor(x / 64)-1);
     try {
       characterDao.update(character);
     } catch (SQLException e) {
@@ -388,7 +380,7 @@ public class Screen extends SurfaceView implements Runnable {
           e.printStackTrace();
         }
       } else {
-        canvas.drawBitmap(bitmap, x * 100, y * 100, null);
+        canvas.drawBitmap(bitmap, x * 64, y * 64, null);
         Log.d("artifact", artifact.toString());
       }
     }

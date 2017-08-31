@@ -284,7 +284,7 @@ public class Screen extends SurfaceView implements Runnable {
         } catch (SQLException e) {
           //do nothing
         }
-//       GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null); //TODO fix game update (crashing app)
+       GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null);
       }
     }
   }
@@ -404,7 +404,7 @@ public class Screen extends SurfaceView implements Runnable {
         }
       } else {
         canvas.drawBitmap(bitmap, x * 64, y * 64, null);
-        Log.d("artifact", artifact.toString());
+//        Log.d("artifact", artifact.toString());
       }
     }
   }

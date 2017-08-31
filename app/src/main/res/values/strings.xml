@@ -10,7 +10,7 @@
 
   <string name="base_url">https://www.skylinksoftwaredevelopment.com/rest</string>
   <string name="post_game">/games</string>
-  <string name="get_game">/games/%d/</string>
+  <string name="get_game">/games/%d</string>
   <string name="put_game">/games/%d</string>
   <string name="get_all_games">/games</string>
   <string name="put_artifact" formatted="false">/games/%d/artifacts/%d/collected</string>

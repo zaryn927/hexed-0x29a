@@ -41,6 +41,7 @@ public class Screen extends SurfaceView implements Runnable {
   static final int UPDATE_INTERVAL = 30;
   static final int WORLD_VIEW_SIZE = 50;
   Bitmap[][] background;
+  Terrain[][] backgroundTiles;
 
   SurfaceHolder holder;
   Thread renderThread = null;
@@ -126,63 +127,54 @@ public class Screen extends SurfaceView implements Runnable {
     artifact13 = BitmapFactory.decodeResource(res, R.drawable.artifact_13);
     artifact14 = BitmapFactory.decodeResource(res, R.drawable.artifact_14);
     artifact15 = BitmapFactory.decodeResource(res, R.drawable.artifact_15);
-    background = new Bitmap[WORLD_VIEW_SIZE][WORLD_VIEW_SIZE];
-
-    for (int i = 0; i < WORLD_VIEW_SIZE; i++){
-      for (int j = 0; j < WORLD_VIEW_SIZE; j++) {
-        Terrain terrain = new Terrain();
-        double elevation = -0.05;
+//    background = new Bitmap[WORLD_VIEW_SIZE][WORLD_VIEW_SIZE];
+    backgroundTiles = new Terrain[WORLD_VIEW_SIZE][WORLD_VIEW_SIZE];
+    int top = - (WORLD_VIEW_SIZE/2);
+    int left = - (WORLD_VIEW_SIZE/2);
+    try {
+      QueryBuilder<Terrain, Integer> queryBuilder = getHelper().getTerrainDao().queryBuilder();
+      queryBuilder.where().between("X_LOC", left, left + WORLD_VIEW_SIZE - 1)
+          .and().between("Y_LOC", top, top + WORLD_VIEW_SIZE - 1);
+      List<Terrain> tiles = getHelper().getTerrainDao().query(queryBuilder.prepare());
+      for (Terrain tile : tiles) {
+        // TODO row = tile.gety - top, col = tile.getx - left
+        int row = tile.getY() - top;
+        int col = tile.getX() - left;
+        double elevation = tile.getElevation();
         if (elevation < -0.6){
-          background[i][j] = deepWater;
-        }else if (elevation >= -0.6 && elevation < -0.1){
-          background[i][j] = shallowWater;
-        }else if (elevation >= -0.1 && elevation < 0.0){
-          background[i][j] = sand;
-        }else{
-          background[i][j] = grass;
+          tile.setTile(deepWater);
+        }else if (elevation < -0.1){
+          tile.setTile(shallowWater);
+        }else if (elevation < 0.0){
+          tile.setTile(sand);
+        }else if (elevation < 0.3){
+          tile.setTile(grass);
+        }else {
+          tile.setTile(rock);
         }
-
+        // TODO backgroundTiles[y-top][x-left] = tile
+        backgroundTiles[row][col] = tile;
       }
+    } catch (SQLException e) {
+      //Do nothing
     }
-//    try {
-//      artifactDao = getHelper().getArtifactDao();
-//      Artifact artifact = new Artifact();
-//      artifact.setArtifactType("greenGem");
-//      artifact.setX(2);
-//      artifact.setY(13);
-////      artifact.setCharacter(null);
-//      artifactDao.create(artifact);
+//    for (int i = 0; i < WORLD_VIEW_SIZE; i++){
+//      for (int j = 0; j < WORLD_VIEW_SIZE; j++) {
+//        Terrain terrain ;
+//        double elevation = -0.05;
+//        if (elevation < -0.6){
+//          background[i][j] = deepWater;
+//        }else if (elevation >= -0.6 && elevation < -0.1){
+//          background[i][j] = shallowWater;
+//        }else if (elevation >= -0.1 && elevation < 0.0){
+//          background[i][j] = sand;
+//        }else{
+//          background[i][j] = grass;
+//        }
 //
-//      artifact = new Artifact();
-//      artifact.setArtifactType("blueGem");
-//      artifact.setX(16);
-//      artifact.setY(-13);
-////      artifact.setCharacter(null);
-//      artifactDao.create(artifact);
-//
-//      artifact = new Artifact();
-//      artifact.setArtifactType("redGem");
-//      artifact.setX(-10);
-//      artifact.setY(11);
-////      artifact.setCharacter(null);
-//      artifactDao.create(artifact);
-//
-//      artifact = new Artifact();
-//      artifact.setArtifactType("pearl");
-//      artifact.setX(16);
-//      artifact.setY(10);
-////      artifact.setCharacter(null);
-//      artifactDao.create(artifact);
-//
-//      artifact = new Artifact();
-//      artifact.setArtifactType("crystal");
-//      artifact.setX(-17);
-//      artifact.setY(-11);
-////      artifact.setCharacter(null);
-//      artifactDao.create(artifact);
-//    } catch (SQLException e) {
-//      e.printStackTrace();
+//      }
 //    }
+
   }
 
   private synchronized OrmHelper getHelper() {
@@ -255,13 +247,44 @@ public class Screen extends SurfaceView implements Runnable {
       canvas.drawColor(Color.BLACK);
       for (int i = 0; i < WORLD_VIEW_SIZE; i++){
         for(int j = 0; j < WORLD_VIEW_SIZE; j++ ) {
-          canvas.drawBitmap(background[i][j], j*64 - canvas.getWidth() / 2, i*64 - canvas.getHeight() / 2,null);
+          Terrain tile = backgroundTiles[i][j];
+          canvas.drawBitmap(tile.getTile(), tile.getX() * 64, tile.getY() * 64, null);
+//          canvas.drawBitmap(background[i][j], j*64 - canvas.getWidth() / 2, i*64 - canvas.getHeight() / 2,null);
         }
       }
-      drawArtifacts(canvas, character, queryArtifacts()); //TODO fix server side (no artifacts)
+      drawArtifacts(canvas, character, queryArtifacts());
       holder.unlockCanvasAndPost(canvas);
       if (++tickCounter % UPDATE_INTERVAL == 0){
-//        GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null); //TODO fix game update (crashing app)
+        int top = character.getY() - (WORLD_VIEW_SIZE/2);
+        int left = character.getX() - (WORLD_VIEW_SIZE/2);
+        try {
+          QueryBuilder<Terrain, Integer> queryBuilder = getHelper().getTerrainDao().queryBuilder();
+          queryBuilder.where().between("X_LOC", left, left + WORLD_VIEW_SIZE - 1)
+              .and().between("Y_LOC", top, top + WORLD_VIEW_SIZE - 1);
+          List<Terrain> tiles = getHelper().getTerrainDao().query(queryBuilder.prepare());
+          for (Terrain tile : tiles) {
+            // TODO row = tile.gety - top, col = tile.getx - left
+            int row = tile.getY() - top;
+            int col = tile.getX() - left;
+            double elevation = tile.getElevation();
+            if (elevation < -0.6){
+              tile.setTile(deepWater);
+            }else if (elevation < -0.1){
+              tile.setTile(shallowWater);
+            }else if (elevation < 0.0){
+              tile.setTile(sand);
+            }else if (elevation < 0.3){
+              tile.setTile(grass);
+            }else {
+              tile.setTile(rock);
+            }
+            // TODO backgroundTiles[y-top][x-left] = tile
+            backgroundTiles[row][col] = tile;
+          }
+        } catch (SQLException e) {
+          //do nothing
+        }
+//       GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null); //TODO fix game update (crashing app)
       }
     }
   }

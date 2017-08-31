@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.hexed0x29a.entities;
 
+import android.graphics.Bitmap;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import edu.cnm.deepdive.hexed0x29a.rest_client.Game;
@@ -10,7 +11,9 @@ import edu.cnm.deepdive.hexed0x29a.rest_client.Game;
 @DatabaseTable(tableName = "TERRAIN")
 public class Terrain {
 
-  @DatabaseField(columnName = "DUMMY_ID", id = true)
+  private Bitmap tile = null;
+
+  @DatabaseField(columnName = "DUMMY_ID", generatedId = true)
   private long dummyId;
 
   @DatabaseField(uniqueCombo = true, columnName = "X_LOC", canBeNull = false)
@@ -99,7 +102,14 @@ public class Terrain {
     this.elevation = elevation;
   }
 
-  //  public TerrainType getTerrainType() {
+  public Bitmap getTile() {
+    return tile;
+  }
+
+  public void setTile(Bitmap tile) {
+    this.tile = tile;
+  }
+//  public TerrainType getTerrainType() {
 //    return terrainType;
 //  }
 //

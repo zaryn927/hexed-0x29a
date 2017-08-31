@@ -118,10 +118,10 @@ public class OrmHelper extends OrmLiteSqliteOpenHelper {
       source = connectionSource;
       TableUtils.createTable(connectionSource, Char.class);
       TableUtils.createTable(connectionSource, Terrain.class);
-//      TableUtils.createTable(connectionSource, TerrainType.class);
       TableUtils.createTable(connectionSource, Artifact.class);
+//      TableUtils.createTable(connectionSource, TerrainType.class);
 //      TableUtils.createTable(connectionSource, ArtifactType.class);
-      populateDB();
+//      populateDB();
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -240,6 +240,18 @@ public class OrmHelper extends OrmLiteSqliteOpenHelper {
       alc.set(1,Cursor2);
       return alc;
     }
+  }
+
+  public void reset(){
+    try {
+      TableUtils.dropTable(connectionSource, Terrain.class, true);
+      TableUtils.dropTable(connectionSource, Artifact.class, true);
+      TableUtils.createTable(connectionSource, Artifact.class);
+      TableUtils.createTable(connectionSource, Terrain.class);
+    } catch (SQLException ex){
+      throw new RuntimeException(ex);
+    }
+
   }
 
   public synchronized Dao<Char, Integer> getCharDao() throws SQLException {

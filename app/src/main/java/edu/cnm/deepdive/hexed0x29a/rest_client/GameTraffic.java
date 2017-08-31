@@ -90,6 +90,7 @@ public class GameTraffic {
                   serverCom(gson.toJson(game), context.getResources().getString(R.string.base_url)
                       + context.getResources().getString(R.string.post_game), "POST"), Game.class);
           // TODO write tile objects from game to database (local entities)
+          getHelper().reset();
           for (int i = 0; i < game.neighborhood.tiles.length; i++) {
             for (int j = 0; j < game.neighborhood.tiles[i].length; j++) {
               try {

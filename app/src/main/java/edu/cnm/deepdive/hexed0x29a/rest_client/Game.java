@@ -1,5 +1,7 @@
 package edu.cnm.deepdive.hexed0x29a.rest_client;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.Expose;
 import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
 
@@ -47,6 +49,8 @@ public class Game {
     public String type;
     @Expose
     public Boolean collected;
+
+    public Bitmap image = null;
   }
   public static class Neighborhood{
     
@@ -77,6 +81,9 @@ public class Game {
       public Double elevation;
       @Expose
       public Game.Artifact artifact;
+
+      public Bitmap image = null;
+
     }
   }
 

@@ -41,12 +41,17 @@ public class Screen extends SurfaceView implements Runnable {
   static final int UPDATE_INTERVAL = 100;
   static final int WORLD_VIEW_SIZE = 50;
   Bitmap[][] background;
-  Terrain[][] backgroundTiles;
+  Game.Neighborhood.Tile[][] backgroundTiles;
+
+  private int gameId;
 
   SurfaceHolder holder;
   Thread renderThread = null;
+  private double lastUpdateX;
+  private double lastUpdateY;
+  private Char character;
 
-
+  private boolean updateInProgress = false;
 
   volatile boolean isRunning = false;
   public void setUpPressed(boolean upPressed) {
@@ -127,54 +132,11 @@ public class Screen extends SurfaceView implements Runnable {
     artifact13 = BitmapFactory.decodeResource(res, R.drawable.artifact_13);
     artifact14 = BitmapFactory.decodeResource(res, R.drawable.artifact_14);
     artifact15 = BitmapFactory.decodeResource(res, R.drawable.artifact_15);
-//    background = new Bitmap[WORLD_VIEW_SIZE][WORLD_VIEW_SIZE];
-    backgroundTiles = new Terrain[WORLD_VIEW_SIZE][WORLD_VIEW_SIZE];
-    int top = - (WORLD_VIEW_SIZE/2);
-    int left = - (WORLD_VIEW_SIZE/2);
-    try {
-      QueryBuilder<Terrain, Integer> queryBuilder = getHelper().getTerrainDao().queryBuilder();
-      queryBuilder.where().between("X_LOC", left, left + WORLD_VIEW_SIZE - 1)
-          .and().between("Y_LOC", top, top + WORLD_VIEW_SIZE - 1);
-      List<Terrain> tiles = getHelper().getTerrainDao().query(queryBuilder.prepare());
-      for (Terrain tile : tiles) {
-        // TODO row = tile.gety - top, col = tile.getx - left
-        int row = tile.getY() - top;
-        int col = tile.getX() - left;
-        double elevation = tile.getElevation();
-        if (elevation < -0.6){
-          tile.setTile(deepWater);
-        }else if (elevation < -0.1){
-          tile.setTile(shallowWater);
-        }else if (elevation < 0.0){
-          tile.setTile(sand);
-        }else if (elevation < 0.3){
-          tile.setTile(grass);
-        }else {
-          tile.setTile(rock);
-        }
-        // TODO backgroundTiles[y-top][x-left] = tile
-        backgroundTiles[row][col] = tile;
-      }
-    } catch (SQLException e) {
-      //Do nothing
-    }
-//    for (int i = 0; i < WORLD_VIEW_SIZE; i++){
-//      for (int j = 0; j < WORLD_VIEW_SIZE; j++) {
-//        Terrain terrain ;
-//        double elevation = -0.05;
-//        if (elevation < -0.6){
-//          background[i][j] = deepWater;
-//        }else if (elevation >= -0.6 && elevation < -0.1){
-//          background[i][j] = shallowWater;
-//        }else if (elevation >= -0.1 && elevation < 0.0){
-//          background[i][j] = sand;
-//        }else{
-//          background[i][j] = grass;
-//        }
-//
-//      }
-//    }
-
+    character = new Char();
+    character.setX(0);
+    character.setY(0);
+    setUpdateInProgress(true);
+    GameTraffic.getInstance(null).newGame(50, this);
   }
 
   private synchronized OrmHelper getHelper() {
@@ -206,7 +168,8 @@ public class Screen extends SurfaceView implements Runnable {
 //    }
     double x = 0.0;
     double y = 0.0;
-    Char character = new Char();
+    lastUpdateX = x;
+    lastUpdateY = y;
 //    character.setName("Me");
     character.setX((int) (x/64));
     character.setY((int)(y/64));
@@ -219,6 +182,7 @@ public class Screen extends SurfaceView implements Runnable {
 //    double scale = 1;
     double moveDistance = 10 ;
     long tickCounter = 0;
+
     while(isRunning) {
 
       if (!holder.getSurface().isValid()) {
@@ -247,44 +211,58 @@ public class Screen extends SurfaceView implements Runnable {
       canvas.drawColor(Color.BLACK);
       for (int i = 0; i < WORLD_VIEW_SIZE; i++){
         for(int j = 0; j < WORLD_VIEW_SIZE; j++ ) {
-          Terrain tile = backgroundTiles[i][j];
-          canvas.drawBitmap(tile.getTile(), tile.getX() * 64, tile.getY() * 64, null);
+          Game.Neighborhood.Tile tile = backgroundTiles[i][j];
+          canvas.drawBitmap(tile.image, tile.x * 64, tile.y * 64, null);
 //          canvas.drawBitmap(background[i][j], j*64 - canvas.getWidth() / 2, i*64 - canvas.getHeight() / 2,null);
+          if (tile.artifact != null) {
+            if (tile.artifact.collected != null && !tile.artifact.collected && tile.x == character.getX() && tile.y == character.getY()) {
+              tile.artifact.collected = true;
+              GameTraffic.getInstance(null).artCollected(((NewGame) context).getGameId(), tile.artifact.id, true);
+            }
+            if (tile.artifact.collected != null && !tile.artifact.collected) {
+              canvas.drawBitmap(tile.artifact.image, tile.x * 64, tile.y * 64, null);
+            }
+          }
         }
       }
-      drawArtifacts(canvas, character, queryArtifacts());
+      //drawArtifacts(canvas, character, queryArtifacts());
       holder.unlockCanvasAndPost(canvas);
-      if (++tickCounter % UPDATE_INTERVAL == 0){
-        int top = character.getY() - (WORLD_VIEW_SIZE/2);
-        int left = character.getX() - (WORLD_VIEW_SIZE/2);
-        try {
-          QueryBuilder<Terrain, Integer> queryBuilder = getHelper().getTerrainDao().queryBuilder();
-          queryBuilder.where().between("X_LOC", left, left + WORLD_VIEW_SIZE - 1)
-              .and().between("Y_LOC", top, top + WORLD_VIEW_SIZE - 1);
-          List<Terrain> tiles = getHelper().getTerrainDao().query(queryBuilder.prepare());
-          for (Terrain tile : tiles) {
-            // TODO row = tile.gety - top, col = tile.getx - left
-            int row = tile.getY() - top;
-            int col = tile.getX() - left;
-            double elevation = tile.getElevation();
-            if (elevation < -0.6){
-              tile.setTile(deepWater);
-            }else if (elevation < -0.1){
-              tile.setTile(shallowWater);
-            }else if (elevation < 0.0){
-              tile.setTile(sand);
-            }else if (elevation < 0.3){
-              tile.setTile(grass);
-            }else {
-              tile.setTile(rock);
-            }
-            // TODO backgroundTiles[y-top][x-left] = tile
-            backgroundTiles[row][col] = tile;
-          }
-        } catch (SQLException e) {
-          //do nothing
-        }
-       GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null);
+//      if (++tickCounter % UPDATE_INTERVAL == 0){
+      if ((Math.abs(x - lastUpdateX) > WORLD_VIEW_SIZE / 4
+                || Math.abs(y - lastUpdateY) > WORLD_VIEW_SIZE / 4)
+              && !isUpdateInProgress()) {
+        setUpdateInProgress(true);
+        GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null, this);
+//        lastUpdateX = x;
+//        lastUpdateY = y;
+//        int left = character.getX() - (WORLD_VIEW_SIZE/2);
+//        try {
+//          QueryBuilder<Terrain, Integer> queryBuilder = getHelper().getTerrainDao().queryBuilder();
+//          queryBuilder.where().between("X_LOC", left, left + WORLD_VIEW_SIZE - 1)
+//              .and().between("Y_LOC", top, top + WORLD_VIEW_SIZE - 1);
+//          List<Terrain> tiles = getHelper().getTerrainDao().query(queryBuilder.prepare());
+//          for (Terrain tile : tiles) {
+//            // TODO row = tile.gety - top, col = tile.getx - left
+//            int row = tile.getY() - top;
+//            int col = tile.getX() - left;
+//            double elevation = tile.getElevation();
+//            if (elevation < -0.6){
+//              tile.setTile(deepWater);
+//            }else if (elevation < -0.1){
+//              tile.setTile(shallowWater);
+//            }else if (elevation < 0.0){
+//              tile.setTile(sand);
+//            }else if (elevation < 0.3){
+//              tile.setTile(grass);
+//            }else {
+//              tile.setTile(rock);
+//            }
+//            // TODO backgroundTiles[y-top][x-left] = tile
+//            backgroundTiles[row][col] = tile;
+//          }
+//        } catch (SQLException e) {
+//          //do nothing
+//        }
       }
     }
   }
@@ -312,100 +290,201 @@ public class Screen extends SurfaceView implements Runnable {
 //    }
   }
 
-  public boolean collisionDetection (int x, int y, int dx, int dy) {
-    Terrain t = null;
-    try {
-      terrainDao = getHelper().getTerrainDao();
-      QueryBuilder<Terrain, Integer> terrainQuery = terrainDao.queryBuilder();
-      t = terrainQuery.where().eq("X_LOC", x + dx).and().eq("Y_LOC", y + dy).queryForFirst();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return t == null || t.isBlocked();
+//  public boolean collisionDetection (int x, int y, int dx, int dy) {
+//    Terrain t = null;
+//    try {
+//      terrainDao = getHelper().getTerrainDao();
+//      QueryBuilder<Terrain, Integer> terrainQuery = terrainDao.queryBuilder();
+//      t = terrainQuery.where().eq("X_LOC", x + dx).and().eq("Y_LOC", y + dy).queryForFirst();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
+//    return t == null || t.isBlocked();
+//  }
+
+//  public List<Artifact> queryArtifacts() {
+//    List<Artifact> artifacts = null;
+//    try {
+//      artifactDao = getHelper().getArtifactDao();
+//      QueryBuilder<Artifact, Integer> queryBuilder = artifactDao.queryBuilder();
+//      artifacts = queryBuilder.where().eq("COLLECTED", false).query();
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
+//    return artifacts;
+//  }
+//
+//  public void drawArtifacts(Canvas canvas, Char character, List<Artifact> artifacts){
+//    float charX = character.getX();
+//    float charY = character.getY();
+//    for (Artifact artifact : artifacts) {
+//      float x = artifact.getX();
+//      float y = artifact.getY();
+//      String name = artifact.getArtifactType();
+//      Bitmap bitmap;
+//      switch (name) {
+//        case "Artifact1":
+//          bitmap = artifact1;
+//          break;
+//        case "Artifact2":
+//          bitmap = artifact2;
+//          break;
+//        case "Artifact3":
+//          bitmap = artifact3;
+//          break;
+//        case "Artifact4":
+//          bitmap = artifact4;
+//          break;
+//        case "Artifact5":
+//          bitmap = artifact5;
+//          break;
+//        case "Artifact6":
+//          bitmap = artifact6;
+//          break;
+//        case "Artifact7":
+//          bitmap = artifact7;
+//          break;
+//        case "Artifact8":
+//          bitmap = artifact8;
+//          break;
+//        case "Artifact9":
+//          bitmap = artifact9;
+//          break;
+//        case "Artifact10":
+//          bitmap = artifact10;
+//          break;
+//        case "Artifact11":
+//          bitmap = artifact11;
+//          break;
+//        case "Artifact12":
+//          bitmap = artifact12;
+//          break;
+//        case "Artifact13":
+//          bitmap = artifact13;
+//          break;
+//        case "Artifact14":
+//          bitmap = artifact14;
+//          break;
+//        case "Artifact15":
+//          bitmap = artifact15;
+//          break;
+//
+//        default:
+//          bitmap = null;
+//      }
+//      if(Math.abs(x - charX) < 0.1 && Math.abs(y - charY) < 0.1) {
+//        try {
+//          artifactDao = getHelper().getArtifactDao();
+//          artifact.setCollected(true);
+//          artifactDao.update(artifact);
+//        } catch (SQLException e) {
+//          e.printStackTrace();
+//        }
+//      } else {
+//        canvas.drawBitmap(bitmap, x * 64, y * 64, null);
+////        Log.d("artifact", artifact.toString());
+//      }
+//    }
+//  }
+//
+  public synchronized boolean isUpdateInProgress() {
+    return updateInProgress;
   }
 
-  public List<Artifact> queryArtifacts() {
-    List<Artifact> artifacts = null;
-    try {
-      artifactDao = getHelper().getArtifactDao();
-      QueryBuilder<Artifact, Integer> queryBuilder = artifactDao.queryBuilder();
-      artifacts = queryBuilder.where().eq("COLLECTED", false).query();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return artifacts;
+  public synchronized void setUpdateInProgress(boolean updateInProgress) {
+    this.updateInProgress = updateInProgress;
   }
 
-  public void drawArtifacts(Canvas canvas, Char character, List<Artifact> artifacts){
-    float charX = character.getX();
-    float charY = character.getY();
-    for (Artifact artifact : artifacts) {
-      float x = artifact.getX();
-      float y = artifact.getY();
-      String name = artifact.getArtifactType();
-      Bitmap bitmap;
-      switch (name) {
-        case "Artifact1":
-          bitmap = artifact1;
-          break;
-        case "Artifact2":
-          bitmap = artifact2;
-          break;
-        case "Artifact3":
-          bitmap = artifact3;
-          break;
-        case "Artifact4":
-          bitmap = artifact4;
-          break;
-        case "Artifact5":
-          bitmap = artifact5;
-          break;
-        case "Artifact6":
-          bitmap = artifact6;
-          break;
-        case "Artifact7":
-          bitmap = artifact7;
-          break;
-        case "Artifact8":
-          bitmap = artifact8;
-          break;
-        case "Artifact9":
-          bitmap = artifact9;
-          break;
-        case "Artifact10":
-          bitmap = artifact10;
-          break;
-        case "Artifact11":
-          bitmap = artifact11;
-          break;
-        case "Artifact12":
-          bitmap = artifact12;
-          break;
-        case "Artifact13":
-          bitmap = artifact13;
-          break;
-        case "Artifact14":
-          bitmap = artifact14;
-          break;
-        case "Artifact15":
-          bitmap = artifact15;
-          break;
+  public synchronized Game.Neighborhood.Tile[][] getBackgroundTiles() {
+    return backgroundTiles;
+  }
 
-        default:
-          bitmap = null;
-      }
-      if(Math.abs(x - charX) < 0.1 && Math.abs(y - charY) < 0.1) {
-        try {
-          artifactDao = getHelper().getArtifactDao();
-          artifact.setCollected(true);
-          artifactDao.update(artifact);
-        } catch (SQLException e) {
-          e.printStackTrace();
+  public void setBackgroundTiles(Game.Neighborhood.Tile[][] backgroundTiles) {
+    int top = character.getY() - (WORLD_VIEW_SIZE/2);
+    int left = character.getX() - (WORLD_VIEW_SIZE/2);
+    for (Game.Neighborhood.Tile[] tileRow : backgroundTiles) {
+      for (Game.Neighborhood.Tile tile : tileRow) {
+        int row = tile.y - top;
+        int col = tile.x - left;
+        double elevation = tile.elevation;
+        if (elevation < -0.6){
+          tile.image = deepWater;
+        } else if (elevation < -0.1){
+          tile.image = shallowWater;
+        } else if (elevation < 0.0){
+          tile.image = sand;
+        } else if (elevation < 0.3){
+          tile.image = grass;
+        } else {
+          tile.image = rock;
         }
-      } else {
-        canvas.drawBitmap(bitmap, x * 64, y * 64, null);
-//        Log.d("artifact", artifact.toString());
+        if (tile.artifact != null) {
+          Bitmap bitmap = null;
+          switch (tile.artifact.type) {
+            case "Artifact1":
+              bitmap = artifact1;
+              break;
+            case "Artifact2":
+              bitmap = artifact2;
+              break;
+            case "Artifact3":
+              bitmap = artifact3;
+              break;
+            case "Artifact4":
+              bitmap = artifact4;
+              break;
+            case "Artifact5":
+              bitmap = artifact5;
+              break;
+            case "Artifact6":
+              bitmap = artifact6;
+              break;
+            case "Artifact7":
+              bitmap = artifact7;
+              break;
+            case "Artifact8":
+              bitmap = artifact8;
+              break;
+            case "Artifact9":
+              bitmap = artifact9;
+              break;
+            case "Artifact10":
+              bitmap = artifact10;
+              break;
+            case "Artifact11":
+              bitmap = artifact11;
+              break;
+            case "Artifact12":
+              bitmap = artifact12;
+              break;
+            case "Artifact13":
+              bitmap = artifact13;
+              break;
+            case "Artifact14":
+              bitmap = artifact14;
+              break;
+            case "Artifact15":
+              bitmap = artifact15;
+              break;
+
+            default:
+              bitmap = null;
+          }
+          tile.artifact.image = bitmap;
+        }
       }
     }
+    synchronized (this) {
+      this.backgroundTiles = backgroundTiles;
+    }
   }
+
+  public synchronized int getGameId() {
+    return gameId;
+  }
+
+  public synchronized void setGameId(int gameId) {
+    this.gameId = gameId;
+  }
+
 }

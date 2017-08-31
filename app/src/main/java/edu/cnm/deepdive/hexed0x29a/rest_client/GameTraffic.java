@@ -13,6 +13,8 @@ import edu.cnm.deepdive.hexed0x29a.activities.Options;
 import edu.cnm.deepdive.hexed0x29a.entities.Artifact;
 import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
 import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
+import edu.cnm.deepdive.hexed0x29a.views.Screen;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +23,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 
 
 /**
@@ -78,7 +81,7 @@ public class GameTraffic {
     return reader;
   }
 
-  public void newGame(final int size, final NewGame gameContext) {
+  public void newGame(final int size, final Screen screenContext) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
@@ -89,37 +92,12 @@ public class GameTraffic {
               .fromJson(
                   serverCom(gson.toJson(game), context.getResources().getString(R.string.base_url)
                       + context.getResources().getString(R.string.post_game), "POST"), Game.class);
-          // TODO write tile objects from game to database (local entities)
-          getHelper().reset();
-          for (int i = 0; i < game.neighborhood.tiles.length; i++) {
-            for (int j = 0; j < game.neighborhood.tiles[i].length; j++) {
-              try {
-                //TODO write contents of game.neighborhood.tiles[i][j] to database
-                Game.Neighborhood.Tile tile = game.neighborhood.tiles[i][j];
-                Terrain entity = new Terrain();
-                entity.setX(tile.x);
-                entity.setY(tile.y);
-                entity.setElevation(tile.elevation);
-                if (tile.artifact != null) {
-                  Artifact artifact = new Artifact();
-                  artifact.setId(tile.artifact.id);
-                  artifact.setX(tile.x);
-                  artifact.setY(tile.y);
-                  artifact.setArtifactType(tile.artifact.type);
-                  artifact.setCollected(false);
-                  getHelper().getArtifactDao().create(artifact);
-                  entity.setArtifact(artifact);
-                }
-                getHelper().getTerrainDao().create(entity);
-              } catch (SQLException e) {
-                e.printStackTrace();
-              }
-              //TODO set remaining fields
-            }
-          }
-          gameContext.setGameId(game.id);
+          screenContext.setBackgroundTiles(game.neighborhood.tiles);
+          screenContext.setGameId(game.id);
         } catch (IOException ex) {
           throw new RuntimeException(ex);
+        } finally {
+          screenContext.setUpdateInProgress(false);
         }
       }
     };
@@ -128,7 +106,7 @@ public class GameTraffic {
 // add to any method that needs a call back, i.e. new game  & hscores, params in those methods referring to activity that needs to be called back to
 
   public void gameUpdate(final Integer id, final Integer x, final Integer y, final Integer score,
-      final Boolean finished, final String playerName) {
+      final Boolean finished, final String playerName, final Screen screenContext) {
     Runnable task = new Runnable() {
       @Override
       public void run() {
@@ -160,45 +138,24 @@ public class GameTraffic {
             try {
               Thread.sleep(1000);
             } catch (InterruptedException ex) {
-              ex.printStackTrace();
+              // Do nothing
             }
             game = gson
                 .fromJson(
                     serverCom(null, context.getResources().getString(R.string.base_url)
                             + String.format(context.getResources().getString(R.string.get_game), id),
                         "GET"), Game.class);
-
-            for (int i = 0; i < game.neighborhood.tiles.length; i++) {
-              for (int j = 0; j < game.neighborhood.tiles[i].length; j++) {
-                try {
-                  //TODO write contents of game.neighborhood.tiles[i][j] to database
-                  Game.Neighborhood.Tile tile = game.neighborhood.tiles[i][j];
-                  Terrain entity = new Terrain();
-                  entity.setX(tile.x);
-                  entity.setY(tile.y);
-                  entity.setElevation(tile.elevation);
-                  if (tile.artifact != null) {
-                    Artifact artifact = new Artifact();
-                    artifact.setId(tile.artifact.id);
-                    artifact.setX(tile.x);
-                    artifact.setY(tile.y);
-                    artifact.setArtifactType(tile.artifact.type);
-                    artifact.setCollected(false);
-                    getHelper().getArtifactDao().create(artifact);
-                    entity.setArtifact(artifact);
-                  }
-                  getHelper().getTerrainDao().create(entity);
-                } catch (SQLException e) {
-                  // do nothing
-                }
-                //TODO set remaining fields
-              }
-            }
+            screenContext.setBackgroundTiles(game.neighborhood.tiles);
+            screenContext.setGameId(game.id);
           }
         } catch (IOException ex) {
           throw new RuntimeException(ex);
+        } finally {
+          screenContext.setUpdateInProgress(false);
         }
+
       }
+
 
     };
     new Thread(task).start();
@@ -211,9 +168,9 @@ public class GameTraffic {
       @Override
       public void run() {
         try {
-          Artifact artifact = getHelper().getArtifactDao().queryForId(artifactId);
-          artifact.setCollected(collected);
-          getHelper().getArtifactDao().update(artifact);
+//          Artifact artifact = getHelper().getArtifactDao().queryForId(artifactId);
+//          artifact.setCollected(collected);
+//          getHelper().getArtifactDao().update(artifact);
 
           // update local entity?
           serverCom(gson.toJson(collected), context.getResources().getString(R.string.base_url)
@@ -221,9 +178,10 @@ public class GameTraffic {
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);
-        } catch (SQLException ex) {
-
         }
+//        } catch (SQLException ex) {
+//
+//        }
 
       }
 

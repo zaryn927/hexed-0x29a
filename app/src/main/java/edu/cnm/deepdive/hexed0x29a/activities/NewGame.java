@@ -211,19 +211,19 @@ public class NewGame extends Activity {
   protected void onResume() {
     super.onResume();
     ((Screen)findViewById(R.id.screenView)).resume();
-    doBindService();
-    Intent music = new Intent();
-    music.putExtra(MusicService.TRACK_ID_KEY, R.raw.overworld_theme);
-    music.setClass(this,MusicService.class);
-    startService(music);
+//    doBindService();
+//    Intent music = new Intent();
+//    music.putExtra(MusicService.TRACK_ID_KEY, R.raw.overworld_theme);
+//    music.setClass(this,MusicService.class);
+//    startService(music);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     ((Screen)findViewById(R.id.screenView)).pause();
-    mServ.stopMusic();
-    doUnbindService();
+//    mServ.stopMusic();
+//    doUnbindService();
   }
 
 }

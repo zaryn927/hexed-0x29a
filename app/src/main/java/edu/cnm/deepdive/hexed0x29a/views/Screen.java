@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
 import android.util.AttributeSet;
@@ -27,6 +28,7 @@ import edu.cnm.deepdive.hexed0x29a.entities.Char;
 import edu.cnm.deepdive.hexed0x29a.entities.Terrain;
 import edu.cnm.deepdive.hexed0x29a.helpers.OrmHelper;
 
+import edu.cnm.deepdive.hexed0x29a.rest_client.Game;
 import edu.cnm.deepdive.hexed0x29a.rest_client.GameTraffic;
 import java.sql.SQLException;
 import java.util.List;
@@ -37,7 +39,8 @@ import java.util.List;
 
 public class Screen extends SurfaceView implements Runnable {
   static final int UPDATE_INTERVAL = 30;
-  Drawable background;
+  static final int WORLD_VIEW_SIZE = 50;
+  Bitmap[][] background;
 
   SurfaceHolder holder;
   Thread renderThread = null;
@@ -67,12 +70,32 @@ public class Screen extends SurfaceView implements Runnable {
   Dao<Artifact, Integer> artifactDao;
   Dao<Terrain, Integer> terrainDao;
   Resources res;
-  Bitmap greenGem;
-  Bitmap blueGem;
-  Bitmap redGem;
-  Bitmap pearl;
-  Bitmap crystal;
-  Bitmap hourglass;
+//  Bitmap greenGem;
+//  Bitmap blueGem;
+//  Bitmap redGem;
+//  Bitmap pearl;
+//  Bitmap crystal;
+//  Bitmap hourglass;
+  Bitmap deepWater;
+  Bitmap shallowWater;
+  Bitmap sand;
+  Bitmap grass;
+  Bitmap rock;
+  Bitmap artifact1;
+  Bitmap artifact2;
+  Bitmap artifact3;
+  Bitmap artifact4;
+  Bitmap artifact5;
+  Bitmap artifact6;
+  Bitmap artifact7;
+  Bitmap artifact8;
+  Bitmap artifact9;
+  Bitmap artifact10;
+  Bitmap artifact11;
+  Bitmap artifact12;
+  Bitmap artifact13;
+  Bitmap artifact14;
+  Bitmap artifact15;
   Context context;
 
 
@@ -83,52 +106,83 @@ public class Screen extends SurfaceView implements Runnable {
     setWillNotDraw(false);
     holder = getHolder();
     res = this.getResources();
-    greenGem = BitmapFactory.decodeResource(res, R.drawable.green_gem);
-    blueGem = BitmapFactory.decodeResource(res, R.drawable.blue_gem);
-    redGem = BitmapFactory.decodeResource(res, R.drawable.red_gem);
-    pearl = BitmapFactory.decodeResource(res, R.drawable.pearl);
-    crystal = BitmapFactory.decodeResource(res, R.drawable.crystal);
-    hourglass = BitmapFactory.decodeResource(res, R.drawable.hourglass);
-    background = res.getDrawable(R.drawable.map);
-    try {
-      artifactDao = getHelper().getArtifactDao();
-      Artifact artifact = new Artifact();
-      artifact.setArtifactType("greenGem");
-      artifact.setX(2);
-      artifact.setY(13);
-//      artifact.setCharacter(null);
-      artifactDao.create(artifact);
+    deepWater = BitmapFactory.decodeResource(res, R.drawable.deep_water);
+    shallowWater = BitmapFactory.decodeResource(res, R.drawable.shallow_water);
+    sand = BitmapFactory.decodeResource(res, R.drawable.sand);
+    grass = BitmapFactory.decodeResource(res, R.drawable.grass);
+    rock = BitmapFactory.decodeResource(res, R.drawable.rock);
+    artifact1 = BitmapFactory.decodeResource(res, R.drawable.artifact_1);
+    artifact2 = BitmapFactory.decodeResource(res, R.drawable.artifact_2);
+    artifact3 = BitmapFactory.decodeResource(res, R.drawable.artifact_3);
+    artifact4 = BitmapFactory.decodeResource(res, R.drawable.artifact_4);
+    artifact5 = BitmapFactory.decodeResource(res, R.drawable.artifact_5);
+    artifact6 = BitmapFactory.decodeResource(res, R.drawable.artifact_6);
+    artifact7 = BitmapFactory.decodeResource(res, R.drawable.artifact_7);
+    artifact8 = BitmapFactory.decodeResource(res, R.drawable.artifact_8);
+    artifact9 = BitmapFactory.decodeResource(res, R.drawable.artifact_9);
+    artifact10 = BitmapFactory.decodeResource(res, R.drawable.artifact_10);
+    artifact11 = BitmapFactory.decodeResource(res, R.drawable.artifact_11);
+    artifact12 = BitmapFactory.decodeResource(res, R.drawable.artifact_12);
+    artifact13 = BitmapFactory.decodeResource(res, R.drawable.artifact_13);
+    artifact14 = BitmapFactory.decodeResource(res, R.drawable.artifact_14);
+    artifact15 = BitmapFactory.decodeResource(res, R.drawable.artifact_15);
+    background = new Bitmap[WORLD_VIEW_SIZE][WORLD_VIEW_SIZE];
 
-      artifact = new Artifact();
-      artifact.setArtifactType("blueGem");
-      artifact.setX(16);
-      artifact.setY(-13);
-//      artifact.setCharacter(null);
-      artifactDao.create(artifact);
+    for (int i = 0; i < WORLD_VIEW_SIZE; i++){
+      for (int j = 0; j < WORLD_VIEW_SIZE; j++) {
+        Terrain terrain = new Terrain();
+        double elevation = 0;
+        if (elevation < -0.6){
+          background[i][j] = deepWater;
+        }else if (elevation >= -0.6 && elevation < -0.1){
+          background[i][j] = shallowWater;
+        }else if (elevation >= -0.1 && elevation < 0.0){
+          background[i][j] = sand;
+        }else{
+          background[i][j] = grass;
+        }
 
-      artifact = new Artifact();
-      artifact.setArtifactType("redGem");
-      artifact.setX(-10);
-      artifact.setY(11);
-//      artifact.setCharacter(null);
-      artifactDao.create(artifact);
-
-      artifact = new Artifact();
-      artifact.setArtifactType("pearl");
-      artifact.setX(16);
-      artifact.setY(10);
-//      artifact.setCharacter(null);
-      artifactDao.create(artifact);
-
-      artifact = new Artifact();
-      artifact.setArtifactType("crystal");
-      artifact.setX(-17);
-      artifact.setY(-11);
-//      artifact.setCharacter(null);
-      artifactDao.create(artifact);
-    } catch (SQLException e) {
-      e.printStackTrace();
+      }
     }
+//    try {
+//      artifactDao = getHelper().getArtifactDao();
+//      Artifact artifact = new Artifact();
+//      artifact.setArtifactType("greenGem");
+//      artifact.setX(2);
+//      artifact.setY(13);
+////      artifact.setCharacter(null);
+//      artifactDao.create(artifact);
+//
+//      artifact = new Artifact();
+//      artifact.setArtifactType("blueGem");
+//      artifact.setX(16);
+//      artifact.setY(-13);
+////      artifact.setCharacter(null);
+//      artifactDao.create(artifact);
+//
+//      artifact = new Artifact();
+//      artifact.setArtifactType("redGem");
+//      artifact.setX(-10);
+//      artifact.setY(11);
+////      artifact.setCharacter(null);
+//      artifactDao.create(artifact);
+//
+//      artifact = new Artifact();
+//      artifact.setArtifactType("pearl");
+//      artifact.setX(16);
+//      artifact.setY(10);
+////      artifact.setCharacter(null);
+//      artifactDao.create(artifact);
+//
+//      artifact = new Artifact();
+//      artifact.setArtifactType("crystal");
+//      artifact.setX(-17);
+//      artifact.setY(-11);
+////      artifact.setCharacter(null);
+//      artifactDao.create(artifact);
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
   }
 
   private synchronized OrmHelper getHelper() {
@@ -161,16 +215,16 @@ public class Screen extends SurfaceView implements Runnable {
     double x = 0.0;
     double y = 0.0;
     Char character = new Char();
-    character.setName("Me");
+//    character.setName("Me");
     character.setX((int) (x/100));
     character.setY((int)(y/100));
-    try {
-      characterDao.create(character);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    double distFromCenter = 0;
-    double scale = 1;
+//    try {
+//      characterDao.create(character);
+//    } catch (SQLException e) {
+//      e.printStackTrace();
+//    }
+//    double distFromCenter = 0;
+//    double scale = 1;
     double moveDistance = 10 ;
     long tickCounter = 0;
     while(isRunning) {
@@ -202,15 +256,20 @@ public class Screen extends SurfaceView implements Runnable {
         }
       }
 
-      distFromCenter = Math.abs(x) + Math.abs(y);
-      scale = distFromCenter / 500 + 1;
-      canvas.scale((float) scale, (float) scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
+//      distFromCenter = Math.abs(x) + Math.abs(y);
+//      scale = distFromCenter / 500 + 1;
+//      canvas.scale((float) scale, (float) scale, canvas.getWidth() / 2, canvas.getHeight() / 2);
       canvas.translate((float) (x + (canvas.getWidth() / 2)), (float) (y + (canvas.getHeight() / 2)));
-      background.draw(canvas);
-      drawArtifacts(canvas, character, queryArtifacts());
+      canvas.drawColor(Color.BLACK);
+      for (int i = 0; i < WORLD_VIEW_SIZE; i++){
+        for(int j = 0; j < WORLD_VIEW_SIZE; j++ ) {
+          canvas.drawBitmap(background[i][j], j*64 - canvas.getWidth() / 2, i*64 - canvas.getHeight() / 2,null);
+        }
+      }
+//      drawArtifacts(canvas, character, queryArtifacts()); //TODO fix server side (no artifacts)
       holder.unlockCanvasAndPost(canvas);
       if (++tickCounter % UPDATE_INTERVAL == 0){
-        GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null);
+//        GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null); //TODO fix game update (crashing app)
       }
     }
   }
@@ -271,23 +330,54 @@ public class Screen extends SurfaceView implements Runnable {
       String name = artifact.getArtifactType();
       Bitmap bitmap;
       switch (name) {
-        case "blueGem":
-          bitmap = blueGem;
+        case "Artifact1":
+          bitmap = artifact1;
           break;
-        case "redGem":
-          bitmap = redGem;
+        case "Artifact2":
+          bitmap = artifact2;
           break;
-        case "greenGem":
-          bitmap = greenGem;
+        case "Artifact3":
+          bitmap = artifact3;
           break;
-        case "pearl":
-          bitmap = pearl;
+        case "Artifact4":
+          bitmap = artifact4;
           break;
-        case "crystal":
-          bitmap = crystal;
+        case "Artifact5":
+          bitmap = artifact5;
           break;
+        case "Artifact6":
+          bitmap = artifact6;
+          break;
+        case "Artifact7":
+          bitmap = artifact7;
+          break;
+        case "Artifact8":
+          bitmap = artifact8;
+          break;
+        case "Artifact9":
+          bitmap = artifact9;
+          break;
+        case "Artifact10":
+          bitmap = artifact10;
+          break;
+        case "Artifact11":
+          bitmap = artifact11;
+          break;
+        case "Artifact12":
+          bitmap = artifact12;
+          break;
+        case "Artifact13":
+          bitmap = artifact13;
+          break;
+        case "Artifact14":
+          bitmap = artifact14;
+          break;
+        case "Artifact15":
+          bitmap = artifact15;
+          break;
+
         default:
-          bitmap = hourglass;
+          bitmap = null;
       }
       if(Math.abs(x - charX) < 0.1 && Math.abs(y - charY) < 0.1) {
         try {

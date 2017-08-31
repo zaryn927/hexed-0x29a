@@ -98,6 +98,7 @@ public class GameTraffic {
                 Terrain entity = new Terrain();
                 entity.setX(tile.x);
                 entity.setY(tile.y);
+                entity.setElevation(tile.elevation);
                 if (tile.artifact != null) {
                   Artifact artifact = new Artifact();
                   artifact.setX(tile.x);
@@ -173,6 +174,7 @@ public class GameTraffic {
                   Terrain entity = new Terrain();
                   entity.setX(tile.x);
                   entity.setY(tile.y);
+                  entity.setElevation(tile.elevation);
                   if (tile.artifact != null) {
                     Artifact artifact = new Artifact();
                     artifact.setX(tile.x);

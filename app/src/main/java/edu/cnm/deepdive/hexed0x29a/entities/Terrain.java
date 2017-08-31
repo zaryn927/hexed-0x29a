@@ -19,6 +19,9 @@ public class Terrain {
   @DatabaseField(uniqueCombo = true, columnName = "Y_LOC", canBeNull = false)
   private int y;
 
+  @DatabaseField(columnName = "ELEVATION", canBeNull = false)
+  private double elevation;
+
   @DatabaseField(columnName = "COLLISION", canBeNull = false)
   private boolean blocked;
 
@@ -86,6 +89,14 @@ public class Terrain {
 
   public void setArtifact(Artifact artifact) {
     this.artifact = artifact;
+  }
+
+  public double getElevation() {
+    return elevation;
+  }
+
+  public void setElevation(double elevation) {
+    this.elevation = elevation;
   }
 
   //  public TerrainType getTerrainType() {

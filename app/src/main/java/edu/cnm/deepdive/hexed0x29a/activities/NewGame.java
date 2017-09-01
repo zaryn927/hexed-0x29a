@@ -80,7 +80,7 @@ public class NewGame extends Activity {
     downButton = (Button) findViewById(R.id.downButton);
     rightButton = (Button) findViewById(R.id.rightButton);
     leftButton = (Button) findViewById(R.id.leftButton);
-    pauseButton = (ImageButton) findViewById(R.id.pauseButton);
+//    pauseButton = (ImageButton) findViewById(R.id.pauseButton);
 
 
     upButton.setOnTouchListener(new View.OnTouchListener() {
@@ -170,12 +170,12 @@ public class NewGame extends Activity {
       }
     });
 
-    pauseButton.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-
-      }
-    });
+//    pauseButton.setOnClickListener(new OnClickListener() {
+//      @Override
+//      public void onClick(View v) {
+//
+//      }
+//    });
 
 
   }

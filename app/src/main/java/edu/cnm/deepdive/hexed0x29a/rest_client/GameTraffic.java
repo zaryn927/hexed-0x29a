@@ -146,7 +146,6 @@ public class GameTraffic {
                             + String.format(context.getResources().getString(R.string.get_game), id),
                         "GET"), Game.class);
             screenContext.setBackgroundTiles(game.neighborhood.tiles);
-            screenContext.setGameId(game.id);
           }
         } catch (IOException ex) {
           throw new RuntimeException(ex);
@@ -174,7 +173,7 @@ public class GameTraffic {
 
           // update local entity?
           serverCom(gson.toJson(collected), context.getResources().getString(R.string.base_url)
-              + context.getResources().getString(R.string.put_artifact), "PUT");
+              + String.format(context.getResources().getString(R.string.put_artifact), gameId, artifactId), "PUT");
 
         } catch (IOException ex) {
           throw new RuntimeException(ex);

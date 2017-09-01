@@ -57,14 +57,14 @@ public class NewGame extends Activity {
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,LayoutParams.FLAG_FULLSCREEN);
     super.onCreate(savedInstanceState);
-    gameTraffic.newGame(NEIGHBORHOOD_SIZE, this);
-    while (getGameId() == null) {
-      try {
-        Thread.sleep(500);
-      } catch (InterruptedException ex) {
-        // Do nothing
-      }
-    }
+//    gameTraffic.newGame(NEIGHBORHOOD_SIZE, this);
+//    while (getGameId() == null) {
+//      try {
+//        Thread.sleep(500);
+//      } catch (InterruptedException ex) {
+//        // Do nothing
+//      }
+//    }
     setContentView(R.layout.activity_game);
 
     backView = (ImageView)findViewById(R.id.backView) ;
@@ -211,19 +211,19 @@ public class NewGame extends Activity {
   protected void onResume() {
     super.onResume();
     ((Screen)findViewById(R.id.screenView)).resume();
-//    doBindService();
-//    Intent music = new Intent();
-//    music.putExtra(MusicService.TRACK_ID_KEY, R.raw.overworld_theme);
-//    music.setClass(this,MusicService.class);
-//    startService(music);
+    doBindService();
+    Intent music = new Intent();
+    music.putExtra(MusicService.TRACK_ID_KEY, R.raw.overworld_theme);
+    music.setClass(this,MusicService.class);
+    startService(music);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     ((Screen)findViewById(R.id.screenView)).pause();
-//    mServ.stopMusic();
-//    doUnbindService();
+    mServ.stopMusic();
+    doUnbindService();
   }
 
 }

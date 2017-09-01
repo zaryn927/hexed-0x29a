@@ -166,6 +166,13 @@ public class Screen extends SurfaceView implements Runnable {
 //    } catch (SQLException e) {
 //      e.printStackTrace();
 //    }
+    while(isUpdateInProgress()){
+      try{
+        Thread.sleep(500);
+      }catch (InterruptedException ex){
+        //do nothing
+      }
+    }
     double x = 0.0;
     double y = 0.0;
     lastUpdateX = x;
@@ -212,15 +219,18 @@ public class Screen extends SurfaceView implements Runnable {
       for (int i = 0; i < WORLD_VIEW_SIZE; i++){
         for(int j = 0; j < WORLD_VIEW_SIZE; j++ ) {
           Game.Neighborhood.Tile tile = backgroundTiles[i][j];
-          canvas.drawBitmap(tile.image, tile.x * 64, tile.y * 64, null);
+          if (tile != null) {
+            canvas.drawBitmap(tile.image, tile.x * 64, tile.y * 64, null);
 //          canvas.drawBitmap(background[i][j], j*64 - canvas.getWidth() / 2, i*64 - canvas.getHeight() / 2,null);
-          if (tile.artifact != null) {
-            if (tile.artifact.collected != null && !tile.artifact.collected && tile.x == character.getX() && tile.y == character.getY()) {
-              tile.artifact.collected = true;
-              GameTraffic.getInstance(null).artCollected(((NewGame) context).getGameId(), tile.artifact.id, true);
-            }
-            if (tile.artifact.collected != null && !tile.artifact.collected) {
-              canvas.drawBitmap(tile.artifact.image, tile.x * 64, tile.y * 64, null);
+            if (tile.artifact != null) {
+              if (tile.artifact.collected != null && !tile.artifact.collected && tile.x == character
+                  .getX() && tile.y == character.getY()) {
+                tile.artifact.collected = true;
+                GameTraffic.getInstance(null).artCollected(getGameId(), tile.artifact.id, true);
+              }
+              if (tile.artifact.collected != null && !tile.artifact.collected) {
+                canvas.drawBitmap(tile.artifact.image, tile.x * 64, tile.y * 64, null);
+              }
             }
           }
         }
@@ -228,13 +238,13 @@ public class Screen extends SurfaceView implements Runnable {
       //drawArtifacts(canvas, character, queryArtifacts());
       holder.unlockCanvasAndPost(canvas);
 //      if (++tickCounter % UPDATE_INTERVAL == 0){
-      if ((Math.abs(x - lastUpdateX) > WORLD_VIEW_SIZE / 4
-                || Math.abs(y - lastUpdateY) > WORLD_VIEW_SIZE / 4)
+      if ((Math.abs(x - lastUpdateX) > WORLD_VIEW_SIZE * 16
+                || Math.abs(y - lastUpdateY) > WORLD_VIEW_SIZE * 16)
               && !isUpdateInProgress()) {
         setUpdateInProgress(true);
-        GameTraffic.getInstance(null).gameUpdate(((NewGame)context).getGameId(), character.getX(),character.getY(),null,null,null, this);
-//        lastUpdateX = x;
-//        lastUpdateY = y;
+        lastUpdateX = x;
+        lastUpdateY = y;
+        GameTraffic.getInstance(null).gameUpdate(getGameId(), character.getX(),character.getY(),null,null,null, this);
 //        int left = character.getX() - (WORLD_VIEW_SIZE/2);
 //        try {
 //          QueryBuilder<Terrain, Integer> queryBuilder = getHelper().getTerrainDao().queryBuilder();
@@ -404,73 +414,75 @@ public class Screen extends SurfaceView implements Runnable {
     int left = character.getX() - (WORLD_VIEW_SIZE/2);
     for (Game.Neighborhood.Tile[] tileRow : backgroundTiles) {
       for (Game.Neighborhood.Tile tile : tileRow) {
-        int row = tile.y - top;
-        int col = tile.x - left;
-        double elevation = tile.elevation;
-        if (elevation < -0.6){
-          tile.image = deepWater;
-        } else if (elevation < -0.1){
-          tile.image = shallowWater;
-        } else if (elevation < 0.0){
-          tile.image = sand;
-        } else if (elevation < 0.3){
-          tile.image = grass;
-        } else {
-          tile.image = rock;
-        }
-        if (tile.artifact != null) {
-          Bitmap bitmap = null;
-          switch (tile.artifact.type) {
-            case "Artifact1":
-              bitmap = artifact1;
-              break;
-            case "Artifact2":
-              bitmap = artifact2;
-              break;
-            case "Artifact3":
-              bitmap = artifact3;
-              break;
-            case "Artifact4":
-              bitmap = artifact4;
-              break;
-            case "Artifact5":
-              bitmap = artifact5;
-              break;
-            case "Artifact6":
-              bitmap = artifact6;
-              break;
-            case "Artifact7":
-              bitmap = artifact7;
-              break;
-            case "Artifact8":
-              bitmap = artifact8;
-              break;
-            case "Artifact9":
-              bitmap = artifact9;
-              break;
-            case "Artifact10":
-              bitmap = artifact10;
-              break;
-            case "Artifact11":
-              bitmap = artifact11;
-              break;
-            case "Artifact12":
-              bitmap = artifact12;
-              break;
-            case "Artifact13":
-              bitmap = artifact13;
-              break;
-            case "Artifact14":
-              bitmap = artifact14;
-              break;
-            case "Artifact15":
-              bitmap = artifact15;
-              break;
-
-            default:
-              bitmap = null;
+        if (tile != null) {
+          int row = tile.y - top;
+          int col = tile.x - left;
+          double elevation = tile.elevation;
+          if (elevation < -0.6) {
+            tile.image = deepWater;
+          } else if (elevation < -0.1) {
+            tile.image = shallowWater;
+          } else if (elevation < 0.0) {
+            tile.image = sand;
+          } else if (elevation < 0.3) {
+            tile.image = grass;
+          } else {
+            tile.image = rock;
           }
-          tile.artifact.image = bitmap;
+          if (tile.artifact != null) {
+            Bitmap bitmap = null;
+            switch (tile.artifact.type) {
+              case "Artifact1":
+                bitmap = artifact1;
+                break;
+              case "Artifact2":
+                bitmap = artifact2;
+                break;
+              case "Artifact3":
+                bitmap = artifact3;
+                break;
+              case "Artifact4":
+                bitmap = artifact4;
+                break;
+              case "Artifact5":
+                bitmap = artifact5;
+                break;
+              case "Artifact6":
+                bitmap = artifact6;
+                break;
+              case "Artifact7":
+                bitmap = artifact7;
+                break;
+              case "Artifact8":
+                bitmap = artifact8;
+                break;
+              case "Artifact9":
+                bitmap = artifact9;
+                break;
+              case "Artifact10":
+                bitmap = artifact10;
+                break;
+              case "Artifact11":
+                bitmap = artifact11;
+                break;
+              case "Artifact12":
+                bitmap = artifact12;
+                break;
+              case "Artifact13":
+                bitmap = artifact13;
+                break;
+              case "Artifact14":
+                bitmap = artifact14;
+                break;
+              case "Artifact15":
+                bitmap = artifact15;
+                break;
+
+              default:
+                bitmap = null;
+            }
+            tile.artifact.image = bitmap;
+          }
         }
       }
     }

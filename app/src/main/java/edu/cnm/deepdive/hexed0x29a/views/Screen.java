@@ -178,8 +178,8 @@ public class Screen extends SurfaceView implements Runnable {
     lastUpdateX = x;
     lastUpdateY = y;
 //    character.setName("Me");
-    character.setX((int) (x/64));
-    character.setY((int)(y/64));
+    character.setX((int) (x/100));
+    character.setY((int)(y/100));
 //    try {
 //      characterDao.create(character);
 //    } catch (SQLException e) {
@@ -220,7 +220,7 @@ public class Screen extends SurfaceView implements Runnable {
         for(int j = 0; j < WORLD_VIEW_SIZE; j++ ) {
           Game.Neighborhood.Tile tile = backgroundTiles[i][j];
           if (tile != null) {
-            canvas.drawBitmap(tile.image, tile.x * 64, tile.y * 64, null);
+            canvas.drawBitmap(tile.image, tile.x * 100, tile.y * 100, null);
 //          canvas.drawBitmap(background[i][j], j*64 - canvas.getWidth() / 2, i*64 - canvas.getHeight() / 2,null);
             if (tile.artifact != null) {
               if (tile.artifact.collected != null && !tile.artifact.collected && tile.x == character
@@ -229,7 +229,7 @@ public class Screen extends SurfaceView implements Runnable {
                 GameTraffic.getInstance(null).artCollected(getGameId(), tile.artifact.id, true);
               }
               if (tile.artifact.collected != null && !tile.artifact.collected) {
-                canvas.drawBitmap(tile.artifact.image, tile.x * 64, tile.y * 64, null);
+                canvas.drawBitmap(tile.artifact.image, tile.x * 100, tile.y * 100, null);
               }
             }
           }
@@ -290,9 +290,9 @@ public class Screen extends SurfaceView implements Runnable {
   }
 
   public void updateCharacterLocation(Char character, double x, double y){
-      character.setY((int)-Math.floor(y / 64)-1);
+      character.setY((int)-Math.floor(y / 100)-1);
     Log.d("character", character.toString());
-      character.setX((int)-Math.floor(x / 64)-1);
+      character.setX((int)-Math.floor(x / 100)-1);
 //    try {
 //      characterDao.update(character);
 //    } catch (SQLException e) {

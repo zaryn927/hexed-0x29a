@@ -38,7 +38,7 @@
     android:layout_marginTop="5dp"
     android:layout_below="@+id/newGameButton"
     android:layout_centerHorizontal="true"
-    app:srcCompat="@drawable/options" />
+    app:srcCompat="@drawable/high_scores" />
   <ImageButton
     android:id="@+id/newGameButton"
     style="@android:style/Widget.Holo.ImageButton"

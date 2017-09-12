@@ -17,6 +17,7 @@ import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
 
+import android.widget.TextView;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -40,6 +41,7 @@ import java.util.List;
 public class Screen extends SurfaceView implements Runnable {
   static final int UPDATE_INTERVAL = 100;
   static final int WORLD_VIEW_SIZE = 50;
+  private int score = 0;
   Bitmap[][] background;
   Game.Neighborhood.Tile[][] backgroundTiles;
 
@@ -227,6 +229,13 @@ public class Screen extends SurfaceView implements Runnable {
                   .getX() && tile.y == character.getY()) {
                 tile.artifact.collected = true;
                 GameTraffic.getInstance(null).artCollected(getGameId(), tile.artifact.id, true);
+                score += 100;
+                ((NewGame)context).runOnUiThread(new Runnable() {
+                  @Override
+                  public void run() {
+                    ((TextView)((NewGame)context).findViewById(R.id.Score)).setText("Score: " + score);
+                  }
+                });
               }
               if (tile.artifact.collected != null && !tile.artifact.collected) {
                 canvas.drawBitmap(tile.artifact.image, tile.x * 100, tile.y * 100, null);
@@ -244,7 +253,7 @@ public class Screen extends SurfaceView implements Runnable {
         setUpdateInProgress(true);
         lastUpdateX = x;
         lastUpdateY = y;
-        GameTraffic.getInstance(null).gameUpdate(getGameId(), character.getX(),character.getY(),null,null,null, this);
+        GameTraffic.getInstance(null).gameUpdate(getGameId(), character.getX(),character.getY(),score,null,null, this);
 //        int left = character.getX() - (WORLD_VIEW_SIZE/2);
 //        try {
 //          QueryBuilder<Terrain, Integer> queryBuilder = getHelper().getTerrainDao().queryBuilder();

@@ -8,7 +8,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +22,7 @@ import android.widget.Button;
 
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import edu.cnm.deepdive.hexed0x29a.R;
 import edu.cnm.deepdive.hexed0x29a.rest_client.GameTraffic;
 import edu.cnm.deepdive.hexed0x29a.views.Screen;
@@ -51,6 +56,8 @@ public class NewGame extends Activity {
   AnimationDrawable walk;
 
   GameTraffic gameTraffic = GameTraffic.getInstance(this);
+
+  public Handler handler;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -177,6 +184,14 @@ public class NewGame extends Activity {
 //      }
 //    });
 
+    new CountDownTimer(90000, 1000) {
+      public void onTick(long millisUntilFinished) {
+        ((TextView)findViewById(R.id.Timer)).setText("Seconds Remaining: " + millisUntilFinished / 1000);
+      }
+      public void onFinish() {
+
+      }
+    }.start();
 
   }
 
